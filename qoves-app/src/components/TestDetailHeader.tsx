@@ -6,8 +6,8 @@ import FaqAccordion from './FaqAccordion';
 import type { FaqItem } from './FaqAccordion';
 import styles from './TestDetailHeader.module.scss';
 
-/* ── Icon: Plus (+) — white, used for closed major sections ── */
-const PlusIcon: React.FC = () => (
+/* ── Icon: Plus (+) ── */
+const PlusIcon: React.FC<{ color?: string }> = ({ color = '#FFFFFF' }) => (
   <svg
     className={styles.iconSvg}
     width="16"
@@ -16,13 +16,13 @@ const PlusIcon: React.FC = () => (
     fill="none"
     aria-hidden="true"
   >
-    <line x1="8" y1="3.33" x2="8" y2="12.67" stroke="#FFFFFF" strokeWidth={1.33} strokeLinecap="round" />
-    <line x1="3.33" y1="8" x2="12.67" y2="8" stroke="#FFFFFF" strokeWidth={1.33} strokeLinecap="round" />
+    <line x1="8" y1="3.33" x2="8" y2="12.67" stroke={color} strokeWidth={1.33} strokeLinecap="round" />
+    <line x1="3.33" y1="8" x2="12.67" y2="8" stroke={color} strokeWidth={1.33} strokeLinecap="round" />
   </svg>
 );
 
-/* ── Icon: X — white, used for open major sections ── */
-const XIcon: React.FC = () => (
+/* ── Icon: X ── */
+const XIcon: React.FC<{ color?: string }> = ({ color = '#FFFFFF' }) => (
   <svg
     className={styles.iconSvg}
     width="16"
@@ -31,8 +31,8 @@ const XIcon: React.FC = () => (
     fill="none"
     aria-hidden="true"
   >
-    <line x1="3.33" y1="3.33" x2="12.67" y2="12.67" stroke="#FFFFFF" strokeWidth={1.33} strokeLinecap="round" />
-    <line x1="12.67" y1="3.33" x2="3.33" y2="12.67" stroke="#FFFFFF" strokeWidth={1.33} strokeLinecap="round" />
+    <line x1="3.33" y1="3.33" x2="12.67" y2="12.67" stroke={color} strokeWidth={1.33} strokeLinecap="round" />
+    <line x1="12.67" y1="3.33" x2="3.33" y2="12.67" stroke={color} strokeWidth={1.33} strokeLinecap="round" />
   </svg>
 );
 
@@ -277,7 +277,7 @@ function CategoryRow({ category, isOpen, isLast, onToggle }: CategoryRowProps) {
         >
           <h3 className={styles.accordionHeading}>{category.label}</h3>
           <span className={styles.iconBtn}>
-            {isOpen ? <XIcon /> : <PlusIcon />}
+            {isOpen ? <XIcon color="#233137" /> : <PlusIcon color="#758084" />}
           </span>
         </button>
 
@@ -293,18 +293,17 @@ function CategoryRow({ category, isOpen, isLast, onToggle }: CategoryRowProps) {
 
 /* ── Main Component ── */
 const TestDetailHeader: React.FC = () => {
-  const [isFeaturedOpen, setIsFeaturedOpen] = useState(true);
-  const [openCategoryIndex, setOpenCategoryIndex] = useState<number | null>(null);
+  // Unified state: only 1 major section open at a time
+  // 'featured' = teal General Questions, 'cat-0'..'cat-N' = category rows
+  const [openSection, setOpenSection] = useState<string | null>('featured');
   const featuredContentRef = useRef<HTMLDivElement | null>(null);
   const featuredInnerRef = useRef<HTMLDivElement | null>(null);
   const featuredTweenRef = useRef<gsap.core.Tween | null>(null);
 
-  const toggleFeatured = useCallback(() => {
-    setIsFeaturedOpen((prev) => !prev);
-  }, []);
+  const isFeaturedOpen = openSection === 'featured';
 
-  const toggleCategory = useCallback((index: number) => {
-    setOpenCategoryIndex((prev) => (prev === index ? null : index));
+  const toggleSection = useCallback((sectionId: string) => {
+    setOpenSection((prev) => (prev === sectionId ? null : sectionId));
   }, []);
 
   // Animate the featured (teal) section open/close
@@ -362,7 +361,7 @@ const TestDetailHeader: React.FC = () => {
 
         {/* ── Test Details Container ── */}
         <div className={styles.testDetailsContainer}>
-          {/* Featured Card (teal) — now collapsible */}
+          {/* Featured Card (teal) — collapsible */}
           <div className={styles.testDetails}>
             {/* Decorative watermark */}
             <span className={styles.watermark} aria-hidden="true">
@@ -375,7 +374,7 @@ const TestDetailHeader: React.FC = () => {
               <button
                 type="button"
                 className={styles.featuredHeader}
-                onClick={toggleFeatured}
+                onClick={() => toggleSection('featured')}
                 aria-expanded={isFeaturedOpen}
               >
                 <h3 className={styles.featuredHeading}>
@@ -396,15 +395,18 @@ const TestDetailHeader: React.FC = () => {
           </div>
 
           {/* ── Accordion Category Rows with GSAP animations ── */}
-          {accordionCategories.map((category, index) => (
-            <CategoryRow
-              key={category.label}
-              category={category}
-              isOpen={openCategoryIndex === index}
-              isLast={index === accordionCategories.length - 1}
-              onToggle={() => toggleCategory(index)}
-            />
-          ))}
+          {accordionCategories.map((category, index) => {
+            const sectionId = `cat-${index}`;
+            return (
+              <CategoryRow
+                key={category.label}
+                category={category}
+                isOpen={openSection === sectionId}
+                isLast={index === accordionCategories.length - 1}
+                onToggle={() => toggleSection(sectionId)}
+              />
+            );
+          })}
         </div>
       </div>
     </section>
@@ -412,3 +414,4 @@ const TestDetailHeader: React.FC = () => {
 };
 
 export default TestDetailHeader;
+
