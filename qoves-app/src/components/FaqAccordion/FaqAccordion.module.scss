@@ -7,6 +7,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  color: #ffffff;
 }
 
 /* ── Individual FAQ item ── */
@@ -20,42 +21,35 @@
   }
 }
 
-/* ── Variant: dark (white text, for teal/dark backgrounds) ── */
-.dark .item {
-  border-bottom-color: rgba(255, 255, 255, 0.1);
+/* ── Active / expanded item – glassmorphic card ── */
+.itemActive {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  border-radius: 6px;
+  box-shadow: 0px 16px 16px rgba(35, 49, 55, 0.03);
+  border-bottom: none;
+  margin-bottom: 2px;
 }
 
-/* ── Variant: light (dark text, for light backgrounds) ── */
+/* ── Variant: light (dark text, for light/white backgrounds) ── */
+.light {
+  color: #233137;
+}
+
 .light .item {
   border-bottom-color: rgba(35, 49, 55, 0.1);
 }
 
-.light .question {
-  color: #233137;
+.light .itemActive {
+  background: rgba(154, 174, 181, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .light .answerText {
   color: #515255;
   opacity: 1;
-}
-
-.light .iconWrap {
-  color: #758084;
-}
-
-.light .itemActive {
-  background: rgba(154, 174, 181, 0.08);
-}
-
-/* ── Active / expanded item – glassmorphic card ── */
-.itemActive {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 6px;
-  box-shadow: 0px 16px 16px rgba(35, 49, 55, 0.03);
-  border-bottom: none;
-  margin-bottom: 2px;
 }
 
 /* ── Header row (question + icon) ── */
@@ -94,7 +88,7 @@
   min-width: 0;
 }
 
-/* ── Icon wrapper (animated rotation via GSAP) ── */
+/* ── Icon wrapper ── */
 .iconWrap {
   display: flex;
   align-items: center;
@@ -102,6 +96,7 @@
   flex-shrink: 0;
   width: 16px;
   height: 16px;
+  color: inherit;
 }
 
 .iconSvg {

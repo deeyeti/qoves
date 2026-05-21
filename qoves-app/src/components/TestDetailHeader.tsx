@@ -1,15 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { gsap } from 'gsap';
 import FaqAccordion from './FaqAccordion';
 import type { FaqItem } from './FaqAccordion';
 import styles from './TestDetailHeader.module.scss';
 
-/* ── Icon Components ── */
-const PlusIcon: React.FC<{ color?: string; strokeWidth?: number }> = ({
-  color = '#758084',
-  strokeWidth = 1,
-}) => (
+/* ── Icon: Plus (+) — white, used for closed major sections ── */
+const PlusIcon: React.FC = () => (
   <svg
     className={styles.iconSvg}
     width="16"
@@ -18,15 +16,13 @@ const PlusIcon: React.FC<{ color?: string; strokeWidth?: number }> = ({
     fill="none"
     aria-hidden="true"
   >
-    <line x1="8" y1="3.33" x2="8" y2="12.67" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
-    <line x1="3.33" y1="8" x2="12.67" y2="8" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    <line x1="8" y1="3.33" x2="8" y2="12.67" stroke="#FFFFFF" strokeWidth={1.33} strokeLinecap="round" />
+    <line x1="3.33" y1="8" x2="12.67" y2="8" stroke="#FFFFFF" strokeWidth={1.33} strokeLinecap="round" />
   </svg>
 );
 
-const MinusIcon: React.FC<{ color?: string; strokeWidth?: number }> = ({
-  color = '#FFFFFF',
-  strokeWidth = 1.33,
-}) => (
+/* ── Icon: X — white, used for open major sections ── */
+const XIcon: React.FC = () => (
   <svg
     className={styles.iconSvg}
     width="16"
@@ -35,7 +31,8 @@ const MinusIcon: React.FC<{ color?: string; strokeWidth?: number }> = ({
     fill="none"
     aria-hidden="true"
   >
-    <line x1="3.33" y1="8" x2="12.67" y2="8" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    <line x1="3.33" y1="3.33" x2="12.67" y2="12.67" stroke="#FFFFFF" strokeWidth={1.33} strokeLinecap="round" />
+    <line x1="12.67" y1="3.33" x2="3.33" y2="12.67" stroke="#FFFFFF" strokeWidth={1.33} strokeLinecap="round" />
   </svg>
 );
 
@@ -220,13 +217,132 @@ const accordionCategories: { label: string; items: FaqItem[] }[] = [
   },
 ];
 
+/* ── GSAP-animated category row ── */
+interface CategoryRowProps {
+  category: { label: string; items: FaqItem[] };
+  isOpen: boolean;
+  isLast: boolean;
+  onToggle: () => void;
+}
+
+function CategoryRow({ category, isOpen, isLast, onToggle }: CategoryRowProps) {
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const innerRef = useRef<HTMLDivElement | null>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
+
+  useEffect(() => {
+    const wrapper = contentRef.current;
+    const inner = innerRef.current;
+    if (!wrapper || !inner) return;
+
+    tweenRef.current?.kill();
+
+    if (isOpen) {
+      const naturalHeight = inner.scrollHeight;
+      tweenRef.current = gsap.fromTo(
+        wrapper,
+        { height: 0, opacity: 0 },
+        {
+          height: naturalHeight,
+          opacity: 1,
+          duration: 0.45,
+          ease: 'power2.out',
+          onComplete: () => gsap.set(wrapper, { height: 'auto' }),
+        },
+      );
+    } else {
+      const currentHeight = wrapper.scrollHeight;
+      if (currentHeight > 0) {
+        gsap.set(wrapper, { height: currentHeight });
+        tweenRef.current = gsap.to(wrapper, {
+          height: 0,
+          opacity: 0,
+          duration: 0.35,
+          ease: 'power2.inOut',
+        });
+      }
+    }
+
+    return () => { tweenRef.current?.kill(); };
+  }, [isOpen]);
+
+  return (
+    <div className={`${styles.iconContainer} ${isLast ? styles.noBorderBottom : ''}`}>
+      <div className={styles.categoryWrapper}>
+        <button
+          type="button"
+          className={styles.accordionHeader}
+          onClick={onToggle}
+          aria-expanded={isOpen}
+        >
+          <h3 className={styles.accordionHeading}>{category.label}</h3>
+          <span className={styles.iconBtn}>
+            {isOpen ? <XIcon /> : <PlusIcon />}
+          </span>
+        </button>
+
+        <div ref={contentRef} className={styles.categoryContentWrapper}>
+          <div ref={innerRef} className={styles.categoryContent}>
+            <FaqAccordion items={category.items} variant="light" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── Main Component ── */
 const TestDetailHeader: React.FC = () => {
+  const [isFeaturedOpen, setIsFeaturedOpen] = useState(true);
   const [openCategoryIndex, setOpenCategoryIndex] = useState<number | null>(null);
+  const featuredContentRef = useRef<HTMLDivElement | null>(null);
+  const featuredInnerRef = useRef<HTMLDivElement | null>(null);
+  const featuredTweenRef = useRef<gsap.core.Tween | null>(null);
 
-  const toggleCategory = (index: number) => {
+  const toggleFeatured = useCallback(() => {
+    setIsFeaturedOpen((prev) => !prev);
+  }, []);
+
+  const toggleCategory = useCallback((index: number) => {
     setOpenCategoryIndex((prev) => (prev === index ? null : index));
-  };
+  }, []);
+
+  // Animate the featured (teal) section open/close
+  useEffect(() => {
+    const wrapper = featuredContentRef.current;
+    const inner = featuredInnerRef.current;
+    if (!wrapper || !inner) return;
+
+    featuredTweenRef.current?.kill();
+
+    if (isFeaturedOpen) {
+      const naturalHeight = inner.scrollHeight;
+      featuredTweenRef.current = gsap.fromTo(
+        wrapper,
+        { height: 0, opacity: 0 },
+        {
+          height: naturalHeight,
+          opacity: 1,
+          duration: 0.45,
+          ease: 'power2.out',
+          onComplete: () => gsap.set(wrapper, { height: 'auto' }),
+        },
+      );
+    } else {
+      const currentHeight = wrapper.scrollHeight;
+      if (currentHeight > 0) {
+        gsap.set(wrapper, { height: currentHeight });
+        featuredTweenRef.current = gsap.to(wrapper, {
+          height: 0,
+          opacity: 0,
+          duration: 0.35,
+          ease: 'power2.inOut',
+        });
+      }
+    }
+
+    return () => { featuredTweenRef.current?.kill(); };
+  }, [isFeaturedOpen]);
 
   return (
     <section className={styles.content}>
@@ -246,7 +362,7 @@ const TestDetailHeader: React.FC = () => {
 
         {/* ── Test Details Container ── */}
         <div className={styles.testDetailsContainer}>
-          {/* Featured Card (teal) */}
+          {/* Featured Card (teal) — now collapsible */}
           <div className={styles.testDetails}>
             {/* Decorative watermark */}
             <span className={styles.watermark} aria-hidden="true">
@@ -255,59 +371,40 @@ const TestDetailHeader: React.FC = () => {
 
             {/* Content */}
             <div className={styles.testDetailContent}>
-              {/* Featured Header */}
-              <div className={styles.featuredHeader}>
+              {/* Featured Header — clickable to toggle */}
+              <button
+                type="button"
+                className={styles.featuredHeader}
+                onClick={toggleFeatured}
+                aria-expanded={isFeaturedOpen}
+              >
                 <h3 className={styles.featuredHeading}>
                   General Questions
                 </h3>
-                <button
-                  type="button"
-                  className={styles.iconBtn}
-                  aria-label="Collapse section"
-                >
-                  <MinusIcon />
-                </button>
-              </div>
+                <span className={styles.iconBtn}>
+                  {isFeaturedOpen ? <XIcon /> : <PlusIcon />}
+                </span>
+              </button>
 
-              {/* FAQ Items (frosted glass container) — powered by FaqAccordion */}
-              <div className={styles.faqContainer}>
-                <FaqAccordion items={featuredFaqItems} defaultOpenId="faq-1" />
+              {/* FAQ Items — GSAP animated wrapper */}
+              <div ref={featuredContentRef} className={styles.featuredContentWrapper}>
+                <div ref={featuredInnerRef} className={styles.faqContainer}>
+                  <FaqAccordion items={featuredFaqItems} defaultOpenId="faq-1" />
+                </div>
               </div>
             </div>
           </div>
 
-          {/* ── Accordion Category Rows ── */}
-          {accordionCategories.map((category, index) => {
-            const isOpen = openCategoryIndex === index;
-            const isLast = index === accordionCategories.length - 1;
-
-            return (
-              <div
-                key={category.label}
-                className={`${styles.iconContainer} ${isLast ? styles.noBorderBottom : ''}`}
-              >
-                <div className={styles.categoryWrapper}>
-                  <button
-                    type="button"
-                    className={styles.accordionHeader}
-                    onClick={() => toggleCategory(index)}
-                    aria-expanded={isOpen}
-                  >
-                    <h3 className={styles.accordionHeading}>{category.label}</h3>
-                    <span className={styles.iconBtn}>
-                      {isOpen ? <MinusIcon color="#233137" /> : <PlusIcon />}
-                    </span>
-                  </button>
-
-                  {isOpen && (
-                    <div className={styles.categoryContent}>
-                      <FaqAccordion items={category.items} variant="light" />
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          {/* ── Accordion Category Rows with GSAP animations ── */}
+          {accordionCategories.map((category, index) => (
+            <CategoryRow
+              key={category.label}
+              category={category}
+              isOpen={openCategoryIndex === index}
+              isLast={index === accordionCategories.length - 1}
+              onToggle={() => toggleCategory(index)}
+            />
+          ))}
         </div>
       </div>
     </section>
