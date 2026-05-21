@@ -86,11 +86,11 @@ export default function EndSectionPart2() {
         0
       );
 
-      // ── Phase 2: Left panel enters from the left, scrolls through ──
+      // ── Phase 2: Left panel enters from the bottom, scrolls through ──
       tl.fromTo(
         leftPanel,
-        { x: -600, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1, duration: 1.5, ease: 'power2.out' },
+        { y: 800, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 1.5, ease: 'power2.out' },
         0.8
       );
       // Left panel scrolls up and out
@@ -100,11 +100,11 @@ export default function EndSectionPart2() {
         2.5
       );
 
-      // ── Phase 3: Right panel enters from the right, scrolls through ──
+      // ── Phase 3: Right panel enters from the bottom, scrolls through ──
       tl.fromTo(
         rightPanel,
-        { x: 600, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1, duration: 1.5, ease: 'power2.out' },
+        { y: 800, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 1.5, ease: 'power2.out' },
         2.0
       );
       // Right panel scrolls up and out
