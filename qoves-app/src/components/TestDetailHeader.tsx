@@ -82,12 +82,11 @@ const TestDetailHeader: React.FC = () => {
         {/* ── Card Header ── */}
         <header className={styles.cardHeader}>
           <div className={styles.badge}>
-            <span className={styles.featureText}>INSIGHTS</span>
+            <span className={styles.featureText}>YOUR QUESTIONS</span>
           </div>
-          <h2 className={styles.title}>Questions? We&apos;ve got answers</h2>
+          <h2 className={styles.title}>Frequently asked questions</h2>
           <p className={styles.subtitle}>
-            Everything you need to know about your facial analysis and
-            personalised glow-up plan.
+            If you have any further questions, please use the chat box in the bottom right or contact us by email at hello@qoves.com
           </p>
         </header>
 
@@ -173,11 +172,10 @@ const TestDetailHeader: React.FC = () => {
           {accordionCategories.map((category, index) => (
             <div
               key={category}
-              className={`${styles.iconContainer} ${
-                index === accordionCategories.length - 1
+              className={`${styles.iconContainer} ${index === accordionCategories.length - 1
                   ? styles.noBorderBottom
                   : ''
-              }`}
+                }`}
             >
               <div className={styles.accordionHeader}>
                 <h3 className={styles.accordionHeading}>{category}</h3>

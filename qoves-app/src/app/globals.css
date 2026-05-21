@@ -33,3 +33,31 @@ button {
   border: none;
   background: none;
 }
+
+/* ---------- Sticky Logo ---------- */
+.stickyLogo {
+  position: fixed;
+  top: 24px;
+  left: 46px;
+  z-index: 9999; /* Ensure it floats above everything */
+  pointer-events: auto;
+}
+
+.logoImage {
+  display: block;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.logoImage:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+@media (max-width: 900px) {
+  .stickyLogo {
+    top: 16px;
+    left: 20px;
+  }
+}
+

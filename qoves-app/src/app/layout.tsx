@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,7 +15,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className="stickyLogo">
+          <Image
+            src="/assets/qoves logo.png"
+            alt="Qoves Logo"
+            width={32}
+            height={32}
+            className="logoImage"
+            priority
+          />
+        </div>
+        {children}
+      </body>
     </html>
   );
 }
