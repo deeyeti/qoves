@@ -34,7 +34,7 @@ const cards: InsightCard[] = [
 
 function LifestylePreview() {
   return (
-    <div className={`${styles.preview} ${styles.previewWide}`} aria-hidden="true">
+    <div className={styles.preview} aria-hidden="true">
       <img src={card1.src} className={styles.previewImage} alt="Lifestyle factors" />
     </div>
   );
