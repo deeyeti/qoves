@@ -1,0 +1,451 @@
+/* ============================================================
+   PersonalizedPlan.module.scss
+   Pixel-perfect layout matching the Qoves screenshot.
+   ============================================================ */
+
+/* ---------- @font-face: PP Neue Montreal ---------- */
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('../fonts/PP_Neue_Montreal/PPNeueMontreal-Thin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('../fonts/PP_Neue_Montreal/PPNeueMontreal-Book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('../fonts/PP_Neue_Montreal/PPNeueMontreal-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('../fonts/PP_Neue_Montreal/PPNeueMontreal-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('../fonts/PP_Neue_Montreal/PPNeueMontreal-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('../fonts/PP_Neue_Montreal/PPNeueMontreal-SemiBolditalic.otf') format('opentype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ---------- @font-face: Zagma Mono ---------- */
+@font-face {
+  font-family: 'Zagma Mono';
+  src: url('../fonts/Zagma_Mono/F37ZagmaMonoTrial-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zagma Mono';
+  src: url('../fonts/Zagma_Mono/F37ZagmaMonoTrial-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zagma Mono';
+  src: url('../fonts/Zagma_Mono/F37ZagmaMonoTrial-Book.otf') format('opentype');
+  font-weight: 450;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zagma Mono';
+  src: url('../fonts/Zagma_Mono/F37ZagmaMonoTrial-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zagma Mono';
+  src: url('../fonts/Zagma_Mono/F37ZagmaMonoTrial-RegularItalic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zagma Mono';
+  src: url('../fonts/Zagma_Mono/F37ZagmaMonoTrial-BookItalic.otf') format('opentype');
+  font-weight: 450;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zagma Mono';
+  src: url('../fonts/Zagma_Mono/F37ZagmaMonoTrial-LightItalic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zagma Mono';
+  src: url('../fonts/Zagma_Mono/F37ZagmaMonoTrial-BoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ---------- Variables ---------- */
+$white: #ffffff;
+$charcoal: #1a1a1a;
+$grey: #737373;
+$accent: #879ba5;
+$accent-dark: #7a8f9a;
+$border-light: #eaeaea;
+$border-track: #e0e0e0;
+$image-bg: #a5bbc1;
+
+/* ---------- Typography ---------- */
+$font-heading: 'PP Neue Montreal', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-body: 'PP Neue Montreal', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-mono: 'Zagma Mono', 'Courier New', monospace;
+
+/* ---------- Section ---------- */
+.section {
+  width: 100%;
+  background: $white;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------- Thin Section Borders ---------- */
+$section-border: 2px solid rgba(224, 228, 230, 0.6);
+
+/* ---------- Header ---------- */
+.header {
+  text-align: center;
+  max-width: 640px;
+  width: 100%;
+  padding: 60px 24px 48px;
+}
+
+.pill {
+  display: inline-block;
+  padding: 6px 20px;
+  border: 1.5px solid $border-light;
+  border-radius: 100px;
+  font-family: $font-mono;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $accent;
+  margin-bottom: 24px;
+}
+
+.heading {
+  font-family: $font-heading;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 400;
+  color: $charcoal;
+  line-height: 1.2;
+  margin: 0 0 16px;
+}
+
+.headingAccent {
+  color: $accent;
+}
+
+.subheading {
+  font-family: $font-body;
+  font-size: clamp(13px, 1.3vw, 15px);
+  color: $grey;
+  line-height: 1.65;
+  margin: 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- Display Area ---------- */
+/* 
+ * CRITICAL SYNC: This layout MUST match the MotionBorder math exactly.
+ * MotionBorder uses: imageFraction = 0.30, gapFraction = 0.40
+ * So we use CSS grid: 30% | 40% | 30% — zero extra padding/margin.
+ * The SVG sits at position:absolute inset:0, so the parent MUST have
+ * NO padding that would push images away from the edges.
+ */
+.displayArea {
+  position: relative;
+  width: 100%;
+  max-width: 1250px;
+  display: grid;
+  grid-template-columns: 30% 40% 30%;
+  align-items: center;
+  min-height: 420px;
+  padding: 0;
+  overflow: visible;
+}
+
+/* ---------- Image Container ---------- */
+/* 
+ * CRITICAL SYNC: imageContainer takes exactly one grid column (30% of parent).
+ * The first imageContainer is in column 1, second is in column 3.
+ * Column 2 (40% gap) is left empty — this is the bottleneck gap area.
+ */
+.imageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 18px;
+  /* MUST match MotionBorder borderRadius={18} */
+  overflow: visible;
+}
+
+.imageContainer:first-of-type {
+  grid-column: 1;
+}
+
+.imageContainer:last-of-type {
+  grid-column: 3;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  z-index: 1;
+  background: $image-bg;
+  border: 1px solid #e4e8ea;
+}
+
+.imageWrapper img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageLabel {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  font-family: $font-mono;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $white;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* ---------- SVG Connector ---------- */
+.connectorArea {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-width: 0;
+}
+
+.connectorSvg {
+  width: 100%;
+  height: 100%;
+  max-width: 160px;
+}
+
+.handleBefore,
+.handleAfter {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.handleBefore {
+  right: -4px;
+}
+
+.handleAfter {
+  left: -4px;
+}
+
+/* ---------- Bottom Grid ---------- */
+.bottomGrid {
+  width: 100%;
+  max-width: 1360px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 48px 24px 72px;
+}
+
+.card {
+  position: relative;
+  padding: 32px 24px 32 px;
+  border: 1px solid $border-light;
+  border-radius: 14px;
+  cursor: default;
+  background: $white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  width: 308px;
+  height: 152px;
+  transition: border-color 0.35s ease,
+    background 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.card:hover {
+  background: linear-gradient(145deg,
+      rgba(141, 147, 150, 0.823) 0%,
+      rgba(120, 126, 129, 0.714) 30%,
+      rgba(116, 126, 132, 0.658) 60%,
+      rgba(70, 81, 81, 0.64) 100%);
+  border-color: rgba(165, 187, 193, 0.35);
+  box-shadow: 0px 20px 32px -20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  .badge {
+    background: rgba(255, 255, 255, 0.30);
+    color: $white;
+  }
+
+  .cardText {
+    color: $white;
+  }
+}
+
+.badge {
+  position: relative;
+  margin-top: 16px;
+  margin-left: 16px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  background: $accent;
+  color: $white;
+  font-family: $font-mono;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+.cardText {
+  position: relative;
+  padding-right: 25%;
+  padding-left: 10px;
+  padding-bottom: 5%;
+  z-index: 1;
+  font-family: $font-body;
+  font-size: 18px;
+  font-weight: 400;
+  color: $charcoal;
+  line-height: 1.5;
+  margin: 0;
+  margin-top: auto;
+  text-align: left;
+  transition: color 0.35s ease;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .displayArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 16px;
+
+    svg {
+      display: none !important;
+    }
+  }
+
+  .imageContainer {
+    max-width: 80%;
+    width: 80%;
+  }
+
+  .imageContainer:first-of-type,
+  .imageContainer:last-of-type {
+    grid-column: auto;
+  }
+
+  .connectorArea {
+    min-height: 80px;
+    width: 100%;
+  }
+
+  .handleBefore {
+    left: -8px;
+  }
+
+  .handleAfter {
+    right: -8px;
+  }
+
+  .bottomGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 40px 16px 48px;
+  }
+
+  .header {
+    margin-bottom: 32px;
+  }
+
+  .imageContainer {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .bottomGrid {
+    grid-template-columns: 1fr;
+  }
+}
