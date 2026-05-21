@@ -67,23 +67,23 @@
   --blur-edge: 0%;
   position: absolute;
   inset: 0;
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  background: rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(48px) saturate(120%);
+  -webkit-backdrop-filter: blur(48px) saturate(120%);
+  background: rgba(0, 0, 0, 0.35);
 
   // Gradient mask: fully blurred from the bottom up to --blur-edge,
-  // then a soft 25% feather zone, then fully transparent above.
+  // then a tight 15% feather zone, then fully transparent above.
   -webkit-mask-image: linear-gradient(
     to top,
     black 0%,
     black var(--blur-edge),
-    transparent calc(var(--blur-edge) + 25%)
+    transparent calc(var(--blur-edge) + 15%)
   );
   mask-image: linear-gradient(
     to top,
     black 0%,
     black var(--blur-edge),
-    transparent calc(var(--blur-edge) + 25%)
+    transparent calc(var(--blur-edge) + 15%)
   );
   will-change: --blur-edge;
 }

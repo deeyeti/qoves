@@ -85,6 +85,10 @@
   width: 100%;
 }
 
+.titleMuted {
+  color: #9aaeb5;
+}
+
 /* ── 7. Subtitle ── */
 .subtitle {
   font-family: 'PP Neue Montreal', sans-serif;
@@ -320,7 +324,7 @@
   }
 }
 
-/* ── 17. Accordion Header ── */
+/* ── 17. Accordion Header (now a button for interactivity) ── */
 .accordionHeader {
   display: flex;
   flex-direction: row;
@@ -330,6 +334,17 @@
   gap: 12px;
   width: 100%;
   box-sizing: border-box;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  color: inherit;
+
+  &:focus-visible {
+    outline: 1px solid rgba(35, 49, 55, 0.3);
+    outline-offset: -1px;
+    border-radius: 4px;
+  }
 }
 
 .accordionHeading {
@@ -342,6 +357,18 @@
   align-items: center;
   color: #233137;
   margin: 0;
+}
+
+/* ── 17b. Category Wrapper & Content ── */
+.categoryWrapper {
+  width: 100%;
+}
+
+.categoryContent {
+  padding: 0 8px 12px;
+  background: rgba(154, 174, 181, 0.06);
+  border-radius: 0 0 8px 8px;
+  color: #233137;
 }
 
 /* ── 18. Shared Icon Button ── */

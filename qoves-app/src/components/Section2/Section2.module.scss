@@ -1,0 +1,431 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  min-height: 832px;
+  background:
+    linear-gradient(180deg, rgba(28, 32, 32, 0.04), rgba(28, 32, 32, 0.46)),
+    #858b8a;
+  color: #ffffff;
+}
+
+.outerFrame {
+  width: min(100%, 1920px);
+  min-height: 832px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.header {
+  display: flex;
+  min-height: 214px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 56px 24px 0;
+  text-align: center;
+
+  h2,
+  p {
+    margin: 0;
+    font-family: 'PP Neue Montreal', Arial, sans-serif;
+    font-weight: 400;
+  }
+
+  h2 {
+    max-width: 620px;
+    font-size: 56px;
+    line-height: 56px;
+    letter-spacing: 0;
+  }
+
+  p {
+    max-width: 490px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-family: 'F37 Zagma Mono Trial', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  line-height: 14px;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
+}
+
+.cardBand {
+  position: relative;
+  height: 530px;
+  margin-top: 0;
+  overflow: hidden;
+}
+
+.cardFrame {
+  position: relative;
+  width: min(100%, 1440px);
+  height: 530px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-right: 1px solid rgba(242, 242, 242, 0.18);
+  border-left: 1px solid rgba(242, 242, 242, 0.18);
+}
+
+.visualStack {
+  position: relative;
+  width: 1360px;
+  height: 530px;
+  margin: 0 auto;
+}
+
+.chartCard {
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background: rgba(42, 53, 55, 0.28);
+  box-shadow: 0 24px 64px rgba(25, 31, 32, 0.2);
+  backdrop-filter: blur(18px);
+}
+
+.chartCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 42%),
+    radial-gradient(circle at 52% 0%, rgba(255, 255, 255, 0.18), transparent 38%);
+}
+
+.cardTopline,
+.axisLabels,
+.badgeRow,
+.featureList {
+  position: relative;
+  z-index: 1;
+}
+
+.cardTopline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  font-family: 'PP Neue Montreal', Arial, sans-serif;
+
+  span {
+    color: rgba(255, 255, 255, 0.58);
+    font-family: 'F37 Zagma Mono Trial', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 9px;
+    line-height: 12px;
+    text-transform: uppercase;
+  }
+
+  strong {
+    max-width: 116px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14px;
+    text-align: right;
+  }
+}
+
+.chartCanvas {
+  position: relative;
+  z-index: 1;
+  height: 176px;
+  padding: 0 12px;
+}
+
+.bellCard {
+  top: 15px;
+  left: 232px;
+  width: 285px;
+  height: 197px;
+}
+
+.scatterCard {
+  top: 15px;
+  left: -69px;
+  width: 285px;
+  height: 337px;
+
+  .chartCanvas {
+    height: 248px;
+  }
+}
+
+.toneCard {
+  top: 15px;
+  right: 232px;
+  width: 273px;
+  height: 337px;
+
+  .chartCanvas {
+    height: 248px;
+  }
+}
+
+.featureCard {
+  top: 15px;
+  right: -69px;
+  width: 352px;
+  height: 165px;
+}
+
+.lineChart {
+  position: relative;
+  z-index: 1;
+  height: 42px;
+  margin: 0 12px 10px;
+}
+
+.axisLabels,
+.badgeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 14px;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: 'PP Neue Montreal', Arial, sans-serif;
+  font-size: 10px;
+  line-height: 12px;
+}
+
+.badgeRow {
+  min-height: 22px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 14px 14px;
+}
+
+.featureItem {
+  display: grid;
+  grid-template-columns: 86px 1fr 24px;
+  align-items: center;
+  gap: 9px;
+  font-family: 'PP Neue Montreal', Arial, sans-serif;
+  font-size: 9px;
+  line-height: 11px;
+
+  div {
+    height: 4px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  i {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: #f4f7f5;
+  }
+
+  strong {
+    font-weight: 400;
+    text-align: right;
+  }
+}
+
+.portraitWrap {
+  position: absolute;
+  z-index: 1;
+  top: -112px;
+  left: 348px;
+  width: 732px;
+  height: 1097px;
+}
+
+.portrait {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 48% 48% 28% 28%;
+  background:
+    radial-gradient(ellipse at 49% 18%, rgba(239, 225, 207, 0.94) 0 12%, transparent 13%),
+    radial-gradient(ellipse at 50% 29%, rgba(206, 176, 151, 0.9) 0 18%, transparent 19%),
+    radial-gradient(ellipse at 47% 49%, rgba(225, 204, 181, 0.95) 0 21%, transparent 22%),
+    linear-gradient(90deg, rgba(30, 35, 35, 0.26), transparent 18%, transparent 78%, rgba(30, 35, 35, 0.28)),
+    linear-gradient(180deg, #c9b19a 0%, #9a7d69 54%, #3b3935 100%);
+  filter: saturate(0.78);
+  opacity: 0.9;
+}
+
+.portrait::before,
+.portrait::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  border-radius: 999px;
+  background: rgba(28, 32, 32, 0.72);
+}
+
+.portrait::before {
+  top: 300px;
+  left: 238px;
+  width: 58px;
+  height: 12px;
+  box-shadow: 202px 0 0 rgba(28, 32, 32, 0.72);
+}
+
+.portrait::after {
+  top: 455px;
+  left: 333px;
+  width: 70px;
+  height: 9px;
+  background: rgba(89, 56, 50, 0.55);
+}
+
+.faceHighlight,
+.faceShadow {
+  position: absolute;
+  inset: 0;
+}
+
+.faceHighlight {
+  background:
+    radial-gradient(ellipse at 45% 34%, rgba(255, 244, 229, 0.42), transparent 13%),
+    radial-gradient(ellipse at 58% 34%, rgba(255, 244, 229, 0.36), transparent 13%),
+    radial-gradient(ellipse at 50% 43%, rgba(255, 237, 215, 0.34), transparent 10%);
+}
+
+.faceShadow {
+  background:
+    radial-gradient(ellipse at 12% 46%, rgba(16, 20, 20, 0.62), transparent 28%),
+    radial-gradient(ellipse at 88% 46%, rgba(16, 20, 20, 0.62), transparent 28%),
+    linear-gradient(180deg, transparent 0 56%, rgba(18, 20, 20, 0.5) 82%);
+}
+
+.edgeBlur {
+  position: absolute;
+  z-index: 5;
+  top: -214px;
+  width: 400px;
+  height: 830px;
+  pointer-events: none;
+  backdrop-filter: blur(18px);
+}
+
+.edgeBlurLeft {
+  left: -240px;
+  background: linear-gradient(90deg, rgba(133, 139, 138, 0.94), rgba(133, 139, 138, 0));
+}
+
+.edgeBlurRight {
+  right: -240px;
+  background: linear-gradient(270deg, rgba(133, 139, 138, 0.94), rgba(133, 139, 138, 0));
+}
+
+@media (max-width: 1200px) {
+  .section,
+  .outerFrame,
+  .cardBand,
+  .cardFrame {
+    min-height: auto;
+    height: auto;
+  }
+
+  .outerFrame {
+    padding: 0 24px 56px;
+  }
+
+  .header {
+    min-height: 248px;
+  }
+
+  .cardFrame {
+    width: min(100%, 760px);
+    overflow: visible;
+    border: 0;
+  }
+
+  .visualStack {
+    display: grid;
+    width: 100%;
+    height: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .chartCard,
+  .portraitWrap {
+    position: relative;
+    inset: auto;
+    width: auto;
+  }
+
+  .bellCard,
+  .scatterCard,
+  .toneCard,
+  .featureCard {
+    height: 260px;
+  }
+
+  .portraitWrap {
+    grid-column: 1 / -1;
+    height: 520px;
+    order: -1;
+  }
+
+  .portrait {
+    width: min(100%, 420px);
+    margin: 0 auto;
+  }
+
+  .edgeBlur {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .outerFrame {
+    padding: 0 18px 40px;
+  }
+
+  .header {
+    min-height: 240px;
+    padding: 44px 0 28px;
+
+    h2 {
+      font-size: 40px;
+      line-height: 42px;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 21px;
+    }
+  }
+
+  .visualStack {
+    grid-template-columns: 1fr;
+  }
+
+  .portraitWrap {
+    height: 420px;
+  }
+
+  .chartCard {
+    min-height: 232px;
+  }
+}

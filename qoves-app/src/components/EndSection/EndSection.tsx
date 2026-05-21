@@ -15,21 +15,22 @@ export default function EndSection() {
     if (!container || !blur) return;
 
     function onScroll() {
-      const cardGrid = container!.querySelector('[data-card-grid]');
-      if (!cardGrid) return;
+      // Track EndSectionPart2 (the pinned scroll section)
+      const part2 = container!.querySelector('[data-node-id="5:60"]');
+      if (!part2) return;
 
-      const gridRect = cardGrid.getBoundingClientRect();
+      const part2Rect = part2.getBoundingClientRect();
       const vh = window.innerHeight;
 
-      // progress 0 → card grid just entering the bottom of the viewport
-      // progress 1 → card grid near the top (~15% from top)
-      const startY = vh;
-      const endY = vh * 0.15;
-      const progress = Math.min(Math.max((startY - gridRect.top) / (startY - endY), 0), 1);
+      // progress 0 → Part2 just entering the bottom of the viewport
+      // progress 1 → Part2's top has reached the top of the viewport
+      const startY = vh;          // Part2 top is at the bottom edge
+      const endY = 0;             // Part2 top is at the very top
+      const progress = Math.min(Math.max((startY - part2Rect.top) / (startY - endY), 0), 1);
 
-      // Drive the gradient mask edge from 0% (no blur visible) to 120%
-      // (overshoots past 100% so the feather zone clears the top edge).
-      const edge = progress * 120;
+      // Drive the gradient mask edge from 0% (no blur visible) to 130%
+      // (overshoots past 100% so the feather zone fully clears the viewport).
+      const edge = progress * 130;
       blur!.style.setProperty('--blur-edge', `${edge}%`);
     }
 
