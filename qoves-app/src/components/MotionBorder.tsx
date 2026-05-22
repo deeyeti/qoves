@@ -1,7 +1,10 @@
 'use client';
 
-import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(useGSAP);
 
 /**
  * MotionBorder
@@ -14,8 +17,8 @@ import gsap from 'gsap';
  *
  * CRITICAL SYNC: The layout fractions here MUST match the CSS grid in
  * PersonalizedPlan.module.scss exactly:
- *   grid-template-columns: 45% 10% 45%
- *   → imageFraction = 0.45, gapFraction = 0.10
+ *   grid-template-columns: 30% 40% 30%
+ *   → imageFraction = 0.30, gapFraction = 0.40
  *
  * Animates two tiny square dots exactly 50% apart along the path.
  */
@@ -101,10 +104,10 @@ const MotionBorder: React.FC<MotionBorderProps> = ({
     const cr = bridgeCurveRadius;
 
     // ═══ SYNCHRONIZED LAYOUT MATH ═══
-    // CSS grid: grid-template-columns: 45% 10% 45%
+    // CSS grid: grid-template-columns: 30% 40% 30%
     // Parent has padding: 0, so SVG inset:0 aligns with grid edges exactly.
-    const imgW = W * imageFraction;   // Each image width = 45% of parent
-    const gapW = W * gapFraction;     // Center gap = 10% of parent
+    const imgW = W * imageFraction;   // Each image width = 30% of parent
+    const gapW = W * gapFraction;     // Center gap = 40% of parent
     const imgH = imgW * (4 / 3);      // aspect-ratio: 3 / 4
 
     // Vertically center the image region within the container
@@ -204,14 +207,14 @@ const MotionBorder: React.FC<MotionBorderProps> = ({
   }, [size, borderRadius, borderPadding, bridgePosition, bridgeCurveRadius, bridgeGap, imageFraction, gapFraction]);
 
   // Animate the two square dots along the path
-  useEffect(() => {
-    if (!pathD || !pathRef.current || !dot1Ref.current || !dot2Ref.current) return;
+  useGSAP(
+    () => {
+      if (!pathD || !pathRef.current || !dot1Ref.current || !dot2Ref.current) return;
 
-    const path = pathRef.current;
-    const pathLength = path.getTotalLength();
-    const halfDot = dotSize / 2;
+      const path = pathRef.current;
+      const pathLength = path.getTotalLength();
+      const halfDot = dotSize / 2;
 
-    const ctx = gsap.context(() => {
       const tl = gsap.timeline({ repeat: -1, ease: 'none' });
 
       tl.to(
@@ -232,17 +235,18 @@ const MotionBorder: React.FC<MotionBorderProps> = ({
           },
         }
       );
-    });
-
-    return () => ctx.revert();
-  }, [pathD, duration, dotSize]);
+    },
+    { dependencies: [pathD, duration, dotSize] }
+  );
 
   return (
+    // aria-hidden: this is a purely decorative animated border overlay
     <svg
       ref={svgRef}
       width={size.w}
       height={size.h}
       viewBox={`0 0 ${size.w} ${size.h}`}
+      aria-hidden="true"
       style={{
         position: 'absolute',
         inset: 0,

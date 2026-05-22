@@ -60,6 +60,8 @@ const ConnectorArrow: React.FC = () => {
       viewBox="0 0 160 200"
       preserveAspectRatio="xMidYMid meet"
       fill="none"
+      // Decorative illustration — hidden from assistive technology
+      aria-hidden="true"
     >
       <path
         ref={pathRef}
@@ -80,11 +82,10 @@ const ConnectorArrow: React.FC = () => {
 
 /* ── Main Component ── */
 const PersonalizedPlan: React.FC = () => {
-  const sectionRef = useRef<HTMLElement>(null);
   const [activeStepId, setActiveStepId] = useState<number>(2);
 
   return (
-    <section ref={sectionRef} className={styles.section}>
+    <section className={styles.section} aria-label="Get your personalised Qoves plan">
       {/* ── Header ── */}
       <header className={styles.header}>
         <span className={styles.pill}>PERSONALISED ANALYSIS</span>
@@ -100,10 +101,10 @@ const PersonalizedPlan: React.FC = () => {
 
       {/* ── Before / After Display ── */}
       <div className={styles.displayArea}>
-        {/* 
+        {/*
           MotionBorder SVG overlay — sits at absolute inset:0 of displayArea.
           CRITICAL SYNC: imageFraction & gapFraction MUST match the CSS grid:
-            grid-template-columns: 45% 10% 45%
+            grid-template-columns: 30% 40% 30%
         */}
         <MotionBorder
           borderRadius={18}       /* matches .imageContainer border-radius */
@@ -121,36 +122,38 @@ const PersonalizedPlan: React.FC = () => {
         {/* BEFORE */}
         <div className={styles.imageContainer}>
           <div className={styles.imageWrapper}>
-            <span className={styles.imageLabel}>BEFORE</span>
+            <span className={styles.imageLabel} aria-hidden="true">BEFORE</span>
             <img src="/assets/before.webp" alt="Before facial analysis" />
           </div>
-          <div className={styles.handleBefore} />
+          <div className={styles.handleBefore} aria-hidden="true" />
         </div>
-
 
         {/* AFTER */}
         <div className={styles.imageContainer}>
           <div className={styles.imageWrapper}>
-            <span className={styles.imageLabel}>AFTER</span>
+            <span className={styles.imageLabel} aria-hidden="true">AFTER</span>
             <img src="/assets/after.webp" alt="After facial analysis" />
           </div>
-          <div className={styles.handleAfter} />
+          <div className={styles.handleAfter} aria-hidden="true" />
         </div>
       </div>
 
-      {/* ── Bottom Step Cards (hover-only) ── */}
-      <div className={styles.bottomGrid}>
+      {/* ── Bottom Step Cards ── */}
+      <ol className={styles.bottomGrid} aria-label="Steps to get your plan">
         {steps.map((step) => (
-          <div
+          <li
             key={step.id}
             className={`${styles.card} ${activeStepId === step.id ? styles.active : ''}`}
             onMouseEnter={() => setActiveStepId(step.id)}
+            onFocus={() => setActiveStepId(step.id)}
+            tabIndex={0}
+            aria-current={activeStepId === step.id ? 'step' : undefined}
           >
-            <div className={styles.badge}>{step.id}</div>
+            <div className={styles.badge} aria-hidden="true">{step.id}</div>
             <p className={styles.cardText}>{step.text}</p>
-          </div>
+          </li>
         ))}
-      </div>
+      </ol>
     </section>
   );
 };

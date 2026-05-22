@@ -1,18 +1,20 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import EndSectionPart1 from '../EndSectionPart1';
 import EndSectionPart2 from '../EndSectionPart2';
 import styles from './EndSection.module.scss';
 
 export default function EndSection() {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
   const blurRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
-    const blur = blurRef.current;
-    if (!container || !blur) return;
+    const blurEl = blurRef.current;
+    if (!container || !blurEl) return;
+    // Re-assign with a non-nullable type so TypeScript can reason about the closure below.
+    const blur: HTMLDivElement = blurEl;
 
     function onScroll() {
       // Track EndSectionPart2 (the pinned scroll section)
@@ -32,8 +34,8 @@ export default function EndSection() {
       // (overshoots past 100% so the feather zone fully clears the viewport).
       const edge = progress * 130;
       const maskString = `linear-gradient(to top, black 0%, black ${edge}%, transparent ${edge + 15}%)`;
-      blur!.style.webkitMaskImage = maskString;
-      blur!.style.maskImage = maskString;
+      blur.style.webkitMaskImage = maskString;
+      blur.style.maskImage = maskString;
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -43,9 +45,13 @@ export default function EndSection() {
   }, []);
 
   return (
-    <div className={styles.combinedContainer} ref={containerRef}>
-      {/* Sticky Video Background */}
-      <div className={styles.stickyVideoWrapper}>
+    <section
+      className={styles.combinedContainer}
+      ref={containerRef}
+      aria-label="Questions about facial analysis"
+    >
+      {/* Sticky Video Background — decorative, hidden from assistive technology */}
+      <div className={styles.stickyVideoWrapper} aria-hidden="true">
         <video
           className={styles.videoBackground}
           src="/assets/landing-video.mp4"
@@ -58,8 +64,8 @@ export default function EndSection() {
         <div className={styles.darkBlurFilter} />
       </div>
 
-      {/* Glassmorphic blur — sweeps upward on scroll */}
-      <div className={styles.stickyBlurOverlay}>
+      {/* Glassmorphic blur — sweeps upward on scroll, decorative */}
+      <div className={styles.stickyBlurOverlay} aria-hidden="true">
         <div className={styles.glassmorphicBlur} ref={blurRef} />
       </div>
 
@@ -68,6 +74,6 @@ export default function EndSection() {
         <EndSectionPart1 />
         <EndSectionPart2 />
       </div>
-    </div>
+    </section>
   );
 }

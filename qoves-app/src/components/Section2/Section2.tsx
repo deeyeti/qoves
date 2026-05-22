@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import {
   Area,
   AreaChart,
@@ -18,6 +19,10 @@ import {
   YAxis,
 } from 'recharts';
 import styles from './Section2.module.scss';
+
+gsap.registerPlugin(useGSAP);
+
+/* ── Chart Data (extracted outside component for separation of concerns) ── */
 
 const bellCurveData = [
   { x: 0, y: 7 },
@@ -61,9 +66,15 @@ const featureBars = [
   { label: 'Lower third', value: 53 },
 ];
 
+/* ── Chart Card Sub-components ── */
+
 function BellCurveCard() {
   return (
-    <article className={`${styles.chartCard} ${styles.bellCard}`} data-reveal>
+    <article
+      className={`${styles.chartCard} ${styles.bellCard}`}
+      data-reveal
+      aria-label="Feature profile: Eye lift effect distribution chart"
+    >
       <div className={styles.cardTopline}>
         <span>Feature profile</span>
         <strong>Eye lift effect</strong>
@@ -102,7 +113,11 @@ function BellCurveCard() {
 
 function ScatterCard() {
   return (
-    <article className={`${styles.chartCard} ${styles.scatterCard}`} data-reveal>
+    <article
+      className={`${styles.chartCard} ${styles.scatterCard}`}
+      data-reveal
+      aria-label="Population map: Trait distribution scatter chart"
+    >
       <div className={styles.cardTopline}>
         <span>Population map</span>
         <strong>Trait distribution</strong>
@@ -127,7 +142,11 @@ function ScatterCard() {
 
 function ToneCard() {
   return (
-    <article className={`${styles.chartCard} ${styles.toneCard}`} data-reveal>
+    <article
+      className={`${styles.chartCard} ${styles.toneCard}`}
+      data-reveal
+      aria-label="Melanin model: Medium concentration bar chart"
+    >
       <div className={styles.cardTopline}>
         <span>Melanin model</span>
         <strong>Medium concentration</strong>
@@ -154,7 +173,11 @@ function ToneCard() {
 
 function FeatureCard() {
   return (
-    <article className={`${styles.chartCard} ${styles.featureCard}`} data-reveal>
+    <article
+      className={`${styles.chartCard} ${styles.featureCard}`}
+      data-reveal
+      aria-label="Feature comparison: Facial thirds line chart"
+    >
       <div className={styles.cardTopline}>
         <span>Feature comparison</span>
         <strong>Facial thirds</strong>
@@ -179,8 +202,9 @@ function FeatureCard() {
         {featureBars.map((item) => (
           <div className={styles.featureItem} key={item.label}>
             <span>{item.label}</span>
-            <div>
-              <i style={{ width: `${item.value}%` }} />
+            {/* Progress bar track — role="presentation" since it's visual-only */}
+            <div role="presentation">
+              <span style={{ width: `${item.value}%` }} />
             </div>
             <strong>{item.value}</strong>
           </div>
@@ -190,17 +214,12 @@ function FeatureCard() {
   );
 }
 
+/* ── Main Component ── */
 export default function Section2() {
   const sectionRef = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-
-    if (!section) {
-      return;
-    }
-
-    const context = gsap.context(() => {
+  useGSAP(
+    () => {
       gsap.from('[data-reveal]', {
         autoAlpha: 0,
         y: 28,
@@ -217,10 +236,9 @@ export default function Section2() {
         ease: 'power3.out',
         delay: 0.25,
       });
-    }, section);
-
-    return () => context.revert();
-  }, []);
+    },
+    { scope: sectionRef }
+  );
 
   return (
     <section ref={sectionRef} className={styles.section} data-node-id="8:784">
@@ -240,7 +258,8 @@ export default function Section2() {
               <ScatterCard />
               <BellCurveCard />
 
-              <div className={styles.portraitWrap} data-portrait>
+              {/* Decorative CSS portrait illustration — hidden from assistive technology */}
+              <div className={styles.portraitWrap} data-portrait aria-hidden="true">
                 <div className={styles.portrait}>
                   <span className={styles.faceHighlight} />
                   <span className={styles.faceShadow} />

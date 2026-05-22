@@ -1,20 +1,25 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './EndSectionPart2.module.scss';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
+/* ── Types ── */
 type AnswerPanel = {
+  id: string;
   title: string;
   items: string[];
   placement: 'left' | 'right';
 };
 
+/* ── Data ── */
 const panels: AnswerPanel[] = [
   {
+    id: 'consider-this',
     title: 'Consider this...',
     placement: 'left',
     items: [
@@ -25,6 +30,7 @@ const panels: AnswerPanel[] = [
     ],
   },
   {
+    id: 'key-approach',
     title: 'The key is approaching\nit intelligently',
     placement: 'right',
     items: [
@@ -36,36 +42,41 @@ const panels: AnswerPanel[] = [
   },
 ];
 
-function PanelCard({ title, items, placement }: AnswerPanel) {
+/* ── Panel Card ── */
+function PanelCard({ id, title, items, placement }: AnswerPanel) {
+  const headingId = `panel-heading-${id}`;
   return (
-    <aside
+    <div
       className={`${styles.panel} ${styles[placement]}`}
       data-panel={placement}
+      role="group"
+      aria-labelledby={headingId}
     >
-      <h3>{title}</h3>
+      <h3 id={headingId}>{title}</h3>
       <div className={styles.panelItems}>
         {items.map((item) => (
           <p key={item}>{item}</p>
         ))}
       </div>
-    </aside>
+    </div>
   );
 }
 
+/* ── Main Component ── */
 export default function EndSectionPart2() {
   const sectionRef = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+  useGSAP(
+    () => {
+      const section = sectionRef.current;
+      if (!section) return;
 
-    const statement = section.querySelector('[data-statement]') as HTMLElement;
-    const leftPanel = section.querySelector('[data-panel="left"]') as HTMLElement;
-    const rightPanel = section.querySelector('[data-panel="right"]') as HTMLElement;
-    const glassOverlay = section.querySelector('[data-glass-overlay]') as HTMLElement;
-    if (!statement || !leftPanel || !rightPanel || !glassOverlay) return;
+      const statement = section.querySelector('[data-statement]') as HTMLElement;
+      const leftPanel = section.querySelector('[data-panel="left"]') as HTMLElement;
+      const rightPanel = section.querySelector('[data-panel="right"]') as HTMLElement;
+      const glassOverlay = section.querySelector('[data-glass-overlay]') as HTMLElement;
+      if (!statement || !leftPanel || !rightPanel || !glassOverlay) return;
 
-    const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -86,8 +97,6 @@ export default function EndSectionPart2() {
       );
 
       // ── Phase 1: Statement scrolls up and sticks in center ──
-      // It starts below viewport and moves to center (already centered via CSS,
-      // so we animate FROM an offset below).
       tl.fromTo(
         statement,
         { y: 200, autoAlpha: 0 },
@@ -136,14 +145,20 @@ export default function EndSectionPart2() {
         { autoAlpha: 0, duration: 1, ease: 'none' },
         4.5
       );
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
+    },
+    { scope: sectionRef }
+  );
 
   return (
-    <section ref={sectionRef} className={styles.section} data-node-id="5:60">
-      <div className={styles.glassOverlay} data-glass-overlay />
+    <section
+      ref={sectionRef}
+      className={styles.section}
+      data-node-id="5:60"
+      aria-label="Is caring about your appearance vain?"
+    >
+      {/* Decorative glass overlay — hidden from assistive technology */}
+      <div className={styles.glassOverlay} data-glass-overlay aria-hidden="true" />
+
       <div className={styles.content}>
         <div className={styles.frame}>
           <div className={styles.statement} data-statement>

@@ -18,3 +18,11 @@
   flex-grow: 0;
   box-sizing: border-box;
 }
+
+.desktopOnlyHero {
+  display: block;
+
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}

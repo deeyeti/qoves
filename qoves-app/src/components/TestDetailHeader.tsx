@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { gsap } from 'gsap';
+import React, { useState, useRef, useCallback } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import styles from './TestDetailHeader.module.scss';
+
+gsap.registerPlugin(useGSAP);
 
 /* ── Types ── */
 export interface FaqItem {
@@ -46,10 +49,10 @@ const XIcon: React.FC<{ color?: string }> = ({ color = '#FFFFFF' }) => (
   </svg>
 );
 
-/* ── FAQ Unified Categories Dataset (9 Categories Total) ── */
+/* ── FAQ Unified Categories Dataset ── */
 const faqCategories: FaqCategory[] = [
   {
-    id: 'General Questions',
+    id: 'general-questions',
     label: 'General Questions',
     items: [
       {
@@ -245,77 +248,80 @@ function AccordionItem({ item, isOpen, onToggle }: AccordionItemProps) {
   const iconTweenRef = useRef<gsap.core.Tween | null>(null);
   const isFirstRender = useRef(true);
 
-  useEffect(() => {
-    const wrapper = answerWrapperRef.current;
-    const inner = answerInnerRef.current;
-    const icon = iconRef.current;
-    if (!wrapper || !inner || !icon) return;
+  useGSAP(
+    () => {
+      const wrapper = answerWrapperRef.current;
+      const inner = answerInnerRef.current;
+      const icon = iconRef.current;
+      if (!wrapper || !inner || !icon) return;
 
-    const verticalLine = icon.querySelector('[data-vertical]') as SVGLineElement | null;
+      const verticalLine = icon.querySelector('[data-vertical]') as SVGLineElement | null;
 
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      if (isOpen) {
-        gsap.set(wrapper, { height: 'auto', opacity: 1 });
-        if (verticalLine) gsap.set(verticalLine, { scaleY: 0 });
-      } else {
-        gsap.set(wrapper, { height: 0, opacity: 0 });
-        if (verticalLine) gsap.set(verticalLine, { scaleY: 1 });
-      }
-      return;
-    }
-
-    tweenRef.current?.kill();
-    iconTweenRef.current?.kill();
-
-    if (isOpen) {
-      const naturalHeight = inner.scrollHeight;
-      tweenRef.current = gsap.fromTo(
-        wrapper,
-        { height: 0, opacity: 0 },
-        {
-          height: naturalHeight,
-          opacity: 1,
-          duration: 0.4,
-          ease: 'power2.out',
-          onComplete: () => {
-            gsap.set(wrapper, { height: 'auto' });
-          },
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        if (isOpen) {
+          gsap.set(wrapper, { height: 'auto', opacity: 1 });
+          if (verticalLine) gsap.set(verticalLine, { scaleY: 0 });
+        } else {
+          gsap.set(wrapper, { height: 0, opacity: 0 });
+          if (verticalLine) gsap.set(verticalLine, { scaleY: 1 });
         }
-      );
-
-      if (verticalLine) {
-        iconTweenRef.current = gsap.to(verticalLine, {
-          scaleY: 0,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
+        return;
       }
-    } else {
-      const currentHeight = wrapper.scrollHeight;
-      gsap.set(wrapper, { height: currentHeight });
 
-      tweenRef.current = gsap.to(wrapper, {
-        height: 0,
-        opacity: 0,
-        duration: 0.3,
-        ease: 'power2.inOut',
-      });
+      tweenRef.current?.kill();
+      iconTweenRef.current?.kill();
 
-      if (verticalLine) {
-        iconTweenRef.current = gsap.to(verticalLine, {
-          scaleY: 1,
+      if (isOpen) {
+        const naturalHeight = inner.scrollHeight;
+        tweenRef.current = gsap.fromTo(
+          wrapper,
+          { height: 0, opacity: 0 },
+          {
+            height: naturalHeight,
+            opacity: 1,
+            duration: 0.4,
+            ease: 'power2.out',
+            onComplete: () => {
+              gsap.set(wrapper, { height: 'auto' });
+            },
+          }
+        );
+
+        if (verticalLine) {
+          iconTweenRef.current = gsap.to(verticalLine, {
+            scaleY: 0,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        }
+      } else {
+        const currentHeight = wrapper.scrollHeight;
+        gsap.set(wrapper, { height: currentHeight });
+
+        tweenRef.current = gsap.to(wrapper, {
+          height: 0,
+          opacity: 0,
           duration: 0.3,
           ease: 'power2.inOut',
         });
-      }
-    }
 
-    return () => {
-      tweenRef.current?.kill();
-      iconTweenRef.current?.kill();
-    };
-  }, [isOpen]);
+        if (verticalLine) {
+          iconTweenRef.current = gsap.to(verticalLine, {
+            scaleY: 1,
+            duration: 0.3,
+            ease: 'power2.inOut',
+          });
+        }
+      }
+
+      return () => {
+        tweenRef.current?.kill();
+        iconTweenRef.current?.kill();
+      };
+    },
+    { dependencies: [isOpen], revertOnUpdate: true }
+  );
 
   return (
     <div className={`${styles.item} ${isOpen ? styles.itemActive : ''}`}>
@@ -328,7 +334,7 @@ function AccordionItem({ item, isOpen, onToggle }: AccordionItemProps) {
         id={`faq-header-${item.id}`}
       >
         <span className={styles.question}>{item.question}</span>
-        <div className={styles.iconWrap} ref={iconRef}>
+        <div className={styles.iconWrap} ref={iconRef} aria-hidden="true">
           <svg
             className={styles.iconSvg}
             width="16"
@@ -370,7 +376,7 @@ function AccordionItem({ item, isOpen, onToggle }: AccordionItemProps) {
   );
 }
 
-/* ── Major Category Row (GSAP + CSS Transitions) ── */
+/* ── Major Category Row ── */
 interface CategoryRowProps {
   category: FaqCategory;
   isOpen: boolean;
@@ -393,73 +399,85 @@ function CategoryRow({
   const tweenRef = useRef<gsap.core.Tween | null>(null);
   const isFirstRender = useRef(true);
 
-  useEffect(() => {
-    const wrapper = contentRef.current;
-    const inner = innerRef.current;
-    if (!wrapper || !inner) return;
+  const contentId = `category-content-${category.id}`;
+  const headerId = `category-header-${category.id}`;
 
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      if (isOpen) {
-        gsap.set(wrapper, { height: 'auto', opacity: 1 });
-      } else {
-        gsap.set(wrapper, { height: 0, opacity: 0 });
+  useGSAP(
+    () => {
+      const wrapper = contentRef.current;
+      const inner = innerRef.current;
+      if (!wrapper || !inner) return;
+
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        gsap.set(wrapper, isOpen ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 });
+        return;
       }
-      return;
-    }
 
-    tweenRef.current?.kill();
-
-    if (isOpen) {
-      const naturalHeight = inner.scrollHeight;
-      tweenRef.current = gsap.fromTo(
-        wrapper,
-        { height: 0, opacity: 0 },
-        {
-          height: naturalHeight,
-          opacity: 1,
-          duration: 0.45,
-          ease: 'power2.out',
-          onComplete: () => {
-            gsap.set(wrapper, { height: 'auto' });
-          },
-        }
-      );
-    } else {
-      const currentHeight = wrapper.scrollHeight;
-      gsap.set(wrapper, { height: currentHeight });
-
-      tweenRef.current = gsap.to(wrapper, {
-        height: 0,
-        opacity: 0,
-        duration: 0.35,
-        ease: 'power2.inOut',
-      });
-    }
-
-    return () => {
       tweenRef.current?.kill();
-    };
-  }, [isOpen]);
+
+      if (isOpen) {
+        const naturalHeight = inner.scrollHeight;
+        tweenRef.current = gsap.fromTo(
+          wrapper,
+          { height: 0, opacity: 0 },
+          {
+            height: naturalHeight,
+            opacity: 1,
+            duration: 0.45,
+            ease: 'power2.out',
+            onComplete: () => {
+              gsap.set(wrapper, { height: 'auto' });
+            },
+          }
+        );
+      } else {
+        const currentHeight = wrapper.scrollHeight;
+        gsap.set(wrapper, { height: currentHeight });
+
+        tweenRef.current = gsap.to(wrapper, {
+          height: 0,
+          opacity: 0,
+          duration: 0.35,
+          ease: 'power2.inOut',
+        });
+      }
+
+      return () => {
+        tweenRef.current?.kill();
+      };
+    },
+    { dependencies: [isOpen], revertOnUpdate: true }
+  );
 
   return (
     <div
-      className={`${styles.categoryRow} ${isOpen ? styles.categoryRowOpen : ''} ${isLast ? styles.noBorderBottom : ''
-        }`}
+      className={`${styles.categoryRow} ${isOpen ? styles.categoryRowOpen : ''} ${
+        isLast ? styles.noBorderBottom : ''
+      }`}
     >
       <button
         type="button"
+        id={headerId}
         className={styles.accordionHeader}
         onClick={onToggle}
         aria-expanded={isOpen}
+        aria-controls={contentId}
       >
         <h3 className={styles.accordionHeading}>{category.label}</h3>
-        <span className={styles.iconBtn}>
+        {/* Icon is decorative — its meaning is communicated by aria-expanded */}
+        <span className={styles.iconBtn} aria-hidden="true">
           {isOpen ? <XIcon color="#ffffff" /> : <PlusIcon color="#758084" />}
         </span>
       </button>
 
-      <div ref={contentRef} className={styles.categoryContentWrapper}>
+      <div
+        ref={contentRef}
+        id={contentId}
+        className={styles.categoryContentWrapper}
+        role="region"
+        aria-labelledby={headerId}
+      >
         <div ref={innerRef} className={styles.categoryContent}>
           <div className={styles.faqContainer}>
             {category.items.map((item) => (
@@ -479,10 +497,9 @@ function CategoryRow({
 
 /* ── Main Component ── */
 const TestDetailHeader: React.FC = () => {
-  // Unified single-accordion states:
-  // Starts with 'about-analysis' open and its 'faq-5' question expanded
-  const [activeCategoryId, setActiveCategoryId] = useState<string | null>('about-analysis');
-  const [activeMinorId, setActiveMinorId] = useState<string | null>('faq-5');
+  // No category open by default; activeCategoryId is matched against category.id strings
+  const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
+  const [activeMinorId, setActiveMinorId] = useState<string | null>(null);
 
   const handleCategoryToggle = useCallback((id: string) => {
     setActiveCategoryId((prev) => {
@@ -498,7 +515,7 @@ const TestDetailHeader: React.FC = () => {
   }, []);
 
   return (
-    <section className={styles.content}>
+    <section className={styles.content} aria-label="Frequently asked questions">
       <div className={styles.glowUpContainer}>
         {/* ── Card Header ── */}
         <header className={styles.cardHeader}>
@@ -509,25 +526,31 @@ const TestDetailHeader: React.FC = () => {
             Frequently asked <span className={styles.titleMuted}>questions</span>
           </h2>
           <p className={styles.subtitle}>
-            If you have any further questions, please use the chat box in the bottom right or contact us by email at hello@qoves.com
+            If you have any further questions, please use the chat box in the bottom right or
+            contact us by email at hello@qoves.com
           </p>
         </header>
 
-        {/* ── Test Details Container (FAQ Table) ── */}
-        <div className={styles.testDetailsContainer}>
+        {/* ── FAQ Accordion Table ── */}
+        <div
+          className={styles.testDetailsContainer}
+          role="list"
+          aria-label="FAQ categories"
+        >
           {faqCategories.map((category, index) => {
             const isOpen = activeCategoryId === category.id;
             const isLast = index === faqCategories.length - 1;
             return (
-              <CategoryRow
-                key={category.id}
-                category={category}
-                isOpen={isOpen}
-                isLast={isLast}
-                onToggle={() => handleCategoryToggle(category.id)}
-                activeMinorId={activeMinorId}
-                onMinorToggle={handleMinorToggle}
-              />
+              <div key={category.id} role="listitem">
+                <CategoryRow
+                  category={category}
+                  isOpen={isOpen}
+                  isLast={isLast}
+                  onToggle={() => handleCategoryToggle(category.id)}
+                  activeMinorId={activeMinorId}
+                  onMinorToggle={handleMinorToggle}
+                />
+              </div>
             );
           })}
         </div>

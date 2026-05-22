@@ -6,8 +6,11 @@ import styles from "./page.module.scss";
 export default function Home() {
   return (
     <main>
-      <PersonalizedPlan />
-      <div className={styles.spacer} />
+      <div className={styles.desktopOnlyHero}>
+        <PersonalizedPlan />
+        <div className={styles.spacer} />
+      </div>
+      
       <TestDetailHeader />
       <div className={styles.spacer} />
       <EndSection />

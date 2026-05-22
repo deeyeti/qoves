@@ -1,18 +1,23 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import styles from './EndSectionPart1.module.scss';
 import card1 from './card 1.png';
 import card2 from './card 2.png';
 import card3 from './card 3.png';
 
+gsap.registerPlugin(useGSAP);
+
+/* ── Types ── */
 type InsightCard = {
   title: string;
   description: string;
   preview: 'lifestyle' | 'culture' | 'genetics';
 };
 
+/* ── Data ── */
 const cards: InsightCard[] = [
   {
     title: 'Lifestyle factors',
@@ -32,19 +37,23 @@ const cards: InsightCard[] = [
   },
 ];
 
+/* ── Preview sub-components ──
+ * aria-hidden on the wrapper suppresses the entire subtree from the AT tree.
+ * alt="" on the img is therefore redundant but is correct practice in case
+ * aria-hidden is ever removed from the wrapper.
+ */
 function LifestylePreview() {
   return (
     <div className={styles.preview} aria-hidden="true">
-      <img src={card1.src} className={styles.previewImage} alt="Lifestyle factors" />
+      <img src={card1.src} className={styles.previewImage} alt="" />
     </div>
   );
 }
 
-
 function CulturePreview() {
   return (
     <div className={styles.preview} aria-hidden="true">
-      <img src={card2.src} className={styles.previewImage} alt="Cultural beauty standards" />
+      <img src={card2.src} className={styles.previewImage} alt="" />
     </div>
   );
 }
@@ -52,35 +61,23 @@ function CulturePreview() {
 function GeneticsPreview() {
   return (
     <div className={styles.preview} aria-hidden="true">
-      <img src={card3.src} className={styles.previewImage} alt="Genetic factors" />
+      <img src={card3.src} className={styles.previewImage} alt="" />
     </div>
   );
 }
 
 function CardPreview({ type }: { type: InsightCard['preview'] }) {
-  if (type === 'culture') {
-    return <CulturePreview />;
-  }
-
-  if (type === 'genetics') {
-    return <GeneticsPreview />;
-  }
-
+  if (type === 'culture') return <CulturePreview />;
+  if (type === 'genetics') return <GeneticsPreview />;
   return <LifestylePreview />;
 }
 
-
+/* ── Main Component ── */
 export default function EndSectionPart1() {
   const sectionRef = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-
-    if (!section) {
-      return;
-    }
-
-    const context = gsap.context(() => {
+  useGSAP(
+    () => {
       gsap.from('[data-reveal]', {
         autoAlpha: 0,
         y: 28,
@@ -89,19 +86,20 @@ export default function EndSectionPart1() {
         stagger: 0.08,
         delay: 0.15,
       });
-    }, section);
-
-    return () => context.revert();
-  }, []);
+    },
+    { scope: sectionRef }
+  );
 
   return (
-    <section ref={sectionRef} className={styles.section} data-node-id="1:2036">
+    <section
+      ref={sectionRef}
+      className={styles.section}
+      data-node-id="1:2036"
+      aria-label="Will analyzing my face make me insecure?"
+    >
       <div className={styles.content}>
         <div className={styles.wrapper}>
           <div className={styles.hero}>
-            <span className={styles.badge} data-reveal>
-              Your Questions
-            </span>
             <div className={styles.questionBlock} data-reveal>
               <h2>
                 Will analyzing my face

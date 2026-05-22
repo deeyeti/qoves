@@ -268,14 +268,6 @@ $section-border: 2px solid rgba(224, 228, 230, 0.6);
 }
 
 /* ---------- SVG Connector ---------- */
-.connectorArea {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  min-width: 0;
-}
 
 .connectorSvg {
   width: 100%;
@@ -309,11 +301,13 @@ $section-border: 2px solid rgba(224, 228, 230, 0.6);
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   padding: 48px 24px 72px;
+  list-style: none;
+  margin: 0;
 }
 
 .card {
   position: relative;
-  padding: 32px 24px 32 px;
+  padding: 0;
   border: 1px solid $border-light;
   border-radius: 14px;
   cursor: default;
@@ -368,18 +362,17 @@ $section-border: 2px solid rgba(224, 228, 230, 0.6);
   font-family: $font-mono;
   font-size: 12px;
   font-weight: 500;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   transition: background 0.35s ease, color 0.35s ease;
 }
 
 .cardText {
   position: relative;
-  padding-right: 25%;
-  padding-left: 10px;
+  padding-left: 16px;
   padding-bottom: 5%;
   z-index: 1;
   font-family: $font-body;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
   color: $charcoal;
   line-height: 1.5;
