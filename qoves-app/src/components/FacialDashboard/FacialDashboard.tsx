@@ -322,8 +322,8 @@ export default function FacialDashboard() {
           ease: 'none',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top bottom',
-            end: 'center center',
+            start: 'top center',
+            end: 'bottom center',
             scrub: true,
           },
         });
