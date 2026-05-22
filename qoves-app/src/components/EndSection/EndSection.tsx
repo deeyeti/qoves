@@ -31,7 +31,9 @@ export default function EndSection() {
       // Drive the gradient mask edge from 0% (no blur visible) to 130%
       // (overshoots past 100% so the feather zone fully clears the viewport).
       const edge = progress * 130;
-      blur!.style.setProperty('--blur-edge', `${edge}%`);
+      const maskString = `linear-gradient(to top, black 0%, black ${edge}%, transparent ${edge + 15}%)`;
+      blur!.style.webkitMaskImage = maskString;
+      blur!.style.maskImage = maskString;
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });

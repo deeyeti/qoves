@@ -62,7 +62,8 @@ export default function EndSectionPart2() {
     const statement = section.querySelector('[data-statement]') as HTMLElement;
     const leftPanel = section.querySelector('[data-panel="left"]') as HTMLElement;
     const rightPanel = section.querySelector('[data-panel="right"]') as HTMLElement;
-    if (!statement || !leftPanel || !rightPanel) return;
+    const glassOverlay = section.querySelector('[data-glass-overlay]') as HTMLElement;
+    if (!statement || !leftPanel || !rightPanel || !glassOverlay) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -75,6 +76,14 @@ export default function EndSectionPart2() {
           anticipatePin: 1,
         },
       });
+
+      // ── Phase 0: Glass Overlay Fades In ──
+      tl.fromTo(
+        glassOverlay,
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.8, ease: 'power2.out' },
+        0
+      );
 
       // ── Phase 1: Statement scrolls up and sticks in center ──
       // It starts below viewport and moves to center (already centered via CSS,
@@ -120,6 +129,13 @@ export default function EndSectionPart2() {
         { y: -200, autoAlpha: 0, duration: 1, ease: 'none' },
         4.5
       );
+
+      // Fade out glass overlay at the end
+      tl.to(
+        glassOverlay,
+        { autoAlpha: 0, duration: 1, ease: 'none' },
+        4.5
+      );
     }, section);
 
     return () => ctx.revert();
@@ -127,6 +143,7 @@ export default function EndSectionPart2() {
 
   return (
     <section ref={sectionRef} className={styles.section} data-node-id="5:60">
+      <div className={styles.glassOverlay} data-glass-overlay />
       <div className={styles.content}>
         <div className={styles.frame}>
           <div className={styles.statement} data-statement>

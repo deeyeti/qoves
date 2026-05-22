@@ -2,11 +2,22 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { gsap } from 'gsap';
-import FaqAccordion from './FaqAccordion';
-import type { FaqItem } from './FaqAccordion';
 import styles from './TestDetailHeader.module.scss';
 
-/* ── Icon: Plus (+) ── */
+/* ── Types ── */
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+interface FaqCategory {
+  id: string;
+  label: string;
+  items: FaqItem[];
+}
+
+/* ── SVG Icons ── */
 const PlusIcon: React.FC<{ color?: string }> = ({ color = '#FFFFFF' }) => (
   <svg
     className={styles.iconSvg}
@@ -21,7 +32,6 @@ const PlusIcon: React.FC<{ color?: string }> = ({ color = '#FFFFFF' }) => (
   </svg>
 );
 
-/* ── Icon: X ── */
 const XIcon: React.FC<{ color?: string }> = ({ color = '#FFFFFF' }) => (
   <svg
     className={styles.iconSvg}
@@ -36,204 +46,367 @@ const XIcon: React.FC<{ color?: string }> = ({ color = '#FFFFFF' }) => (
   </svg>
 );
 
-/* ── FAQ Data for the featured (teal) section ── */
-const featuredFaqItems: FaqItem[] = [
+/* ── FAQ Unified Categories Dataset (9 Categories Total) ── */
+const faqCategories: FaqCategory[] = [
   {
-    id: 'faq-1',
-    question: 'What is included in the facial analysis report?',
-    answer:
-      'Your report includes a comprehensive breakdown of facial proportions, symmetry analysis, skin quality assessment, and personalised recommendations for improvement based on scientific research and aesthetic principles.',
-  },
-  {
-    id: 'faq-2',
-    question: 'How accurate is the AI-powered assessment?',
-    answer:
-      'Our AI models are trained on over 10 million data points and validated against clinical assessments. The system achieves 94% concordance with expert dermatologists and maxillofacial surgeons.',
-  },
-  {
-    id: 'faq-3',
-    question: 'Can I request a follow-up analysis?',
-    answer:
-      'Absolutely. You can request a follow-up analysis at any time from your dashboard. We recommend waiting at least 3 months between analyses to see meaningful changes.',
-  },
-  {
-    id: 'faq-4',
-    question: 'How long does the full analysis take?',
-    answer:
-      'The AI-powered analysis is generated within 60 seconds of uploading your photos. The full personalised report, including treatment recommendations, is delivered within 24 hours.',
-  },
-  {
-    id: 'faq-5',
-    question: 'What facial features are measured?',
-    answer:
-      'We measure over 80 facial landmarks including facial thirds, canthal tilt, gonial angle, midface ratio, nasal projection, lip proportions, jawline definition, and overall facial symmetry.',
-  },
-  {
-    id: 'faq-6',
-    question: 'Is my uploaded data kept private?',
-    answer:
-      'Yes. All uploaded photos are encrypted at rest and in transit. We never share your data with third parties. You can permanently delete your data at any time from your account settings.',
-  },
-  {
-    id: 'faq-7',
-    question: 'Can I share my results with a clinician?',
-    answer:
-      'Yes. Your report includes a shareable PDF with detailed measurements and visualisations that you can bring to any aesthetic clinician or dermatologist.',
-  },
-  {
-    id: 'faq-8',
-    question: 'How often should I get re-analysed?',
-    answer:
-      'We recommend a re-analysis every 3–6 months if you are actively following a skincare or treatment plan. This helps track your progress with quantitative data.',
-  },
-  {
-    id: 'faq-9',
-    question: 'What file formats are supported for upload?',
-    answer:
-      'We support JPEG, PNG, and HEIC formats. For best results, use a well-lit, front-facing photo taken at eye level with a neutral expression.',
-  },
-];
-
-/* ── Accordion categories with sub-items ── */
-const accordionCategories: { label: string; items: FaqItem[] }[] = [
-  {
-    label: 'Analysis overview',
+    id: 'General Questions',
+    label: 'General Questions',
     items: [
       {
-        id: 'ao-1',
-        question: 'What kind of analysis do you provide?',
+        id: 'faq-1',
+        question: "What's included in the facial analysis?",
         answer:
-          'We offer a multi-dimensional facial analysis covering proportions, symmetry, skin quality, and personalised improvement recommendations based on peer-reviewed research.',
+          'Your report includes a comprehensive breakdown of facial proportions, symmetry analysis, skin quality assessment, and personalised recommendations for improvement based on scientific research and aesthetic principles.',
       },
       {
-        id: 'ao-2',
-        question: 'How is this different from a filter or beauty score app?',
+        id: 'faq-2',
+        question: 'How accurate is your analysis?',
         answer:
-          'Unlike simple scoring apps, our analysis is grounded in clinical research and provides actionable, personalised advice — not a vanity metric.',
+          'Our AI models are trained on over 10 million data points and validated against clinical assessments. The system achieves 94% concordance with expert dermatologists and maxillofacial surgeons.',
+      },
+      {
+        id: 'faq-3',
+        question: 'Is this actually science-backed, or just AI hype?',
+        answer:
+          'Absolutely. All findings are grounded in peer-reviewed scientific literature and validated by practicing aesthetic surgeons and dermatologists.',
+      },
+      {
+        id: 'faq-4',
+        question: 'Does it work for all ethnicities?',
+        answer:
+          'Yes. Our AI models are trained on a highly diverse, global dataset and adjust reference standards dynamically based on demographic factors to ensure accurate, personalized metrics.',
+      },
+      {
+        id: 'faq-5',
+        question: 'How often can I get a new analysis?',
+        answer:
+          'Every year, you upload a new set of photos and answer a few questions to receive a fresh analysis, updated glow-up protocol, and new biometric scores.',
       },
     ],
   },
   {
-    label: 'Facial proportions',
+    id: 'about-protocol',
+    label: 'About The Protocol',
     items: [
       {
-        id: 'fp-1',
-        question: 'What are facial thirds?',
+        id: 'ap-1',
+        question: 'What is a facial glow-up protocol?',
         answer:
-          'Facial thirds divide the face into three horizontal sections: hairline to brow, brow to nose base, and nose base to chin. Balanced thirds are a key marker of facial harmony.',
+          'A personalized protocol is a step-by-step skincare, lifestyle, and treatment plan designed specifically for your facial characteristics to enhance symmetry and skin quality.',
       },
       {
-        id: 'fp-2',
-        question: 'Do you measure the golden ratio?',
+        id: 'ap-2',
+        question: 'How do I follow my protocol?',
         answer:
-          'We measure proportions that correlate with attractiveness research, including ratios aligned with phi (1.618). However, we emphasise personalised improvement over chasing a single ideal.',
+          'You can track your daily routines and recommended treatments directly from your dashboard. We provide easy-to-follow instructions and product recommendations.',
       },
     ],
   },
   {
-    label: 'Treatment options',
+    id: 'experience-use',
+    label: 'Experience & Use',
     items: [
       {
-        id: 'to-1',
-        question: 'Do you recommend surgical procedures?',
+        id: 'eu-1',
+        question: 'Who can use the platform?',
         answer:
-          'We provide a full range of options from skincare routines and lifestyle changes to non-invasive and surgical treatments. You decide what is right for you.',
+          'Our analysis is designed for individuals aged 18 and over, as facial structure and proportions change significantly during adolescence.',
       },
       {
-        id: 'to-2',
-        question: 'Are the treatment plans personalised?',
+        id: 'eu-2',
+        question: 'Is my uploaded photo kept private?',
         answer:
-          'Yes. Every recommendation is tailored to your facial measurements, skin type, goals, and budget. No two reports are the same.',
+          'Yes, privacy is our highest priority. All photos are fully encrypted, processed automatically by our AI models, and never shared with third parties.',
       },
     ],
   },
   {
-    label: 'Privacy & security',
+    id: 'pricing-subscription',
+    label: 'Pricing & Subscription',
     items: [
       {
         id: 'ps-1',
-        question: 'Who has access to my photos?',
+        question: 'Are there any hidden fees?',
         answer:
-          'Only our analysis engine processes your photos. No human reviews your images unless you explicitly request a manual assessment.',
+          'No. All pricing is fully transparent. You can choose between a one-off analysis or a subscription for ongoing progress tracking.',
       },
       {
         id: 'ps-2',
-        question: 'Can I delete my data?',
+        question: 'Can I cancel my subscription anytime?',
         answer:
-          'Yes. You can permanently delete all your data, including photos and reports, from your account settings at any time.',
+          'Yes, you can cancel or change your subscription plan at any time directly from your billing portal with no cancellation fees.',
       },
     ],
   },
   {
-    label: 'Subscription & plans',
+    id: 'photo-requirements',
+    label: 'Photo & Upload Requirements',
     items: [
       {
-        id: 'sp-1',
-        question: 'Is there a free tier?',
+        id: 'pr-1',
+        question: 'What type of photos should I upload?',
         answer:
-          'We offer a free initial assessment with a summary report. Full detailed reports, progress tracking, and treatment plans require a subscription.',
+          'To ensure accurate analysis, please upload well-lit photos taken at eye level, using a neutral facial expression without makeup or glasses.',
       },
       {
-        id: 'sp-2',
-        question: 'Can I cancel at any time?',
+        id: 'pr-2',
+        question: 'Can I upload photos taken with a phone?',
         answer:
-          'Yes. All subscriptions can be cancelled at any time from your account dashboard with no cancellation fees.',
+          'Absolutely. Modern smartphones have excellent cameras that are perfectly suitable. Just ensure the back camera is used with natural lighting and no filters.',
       },
     ],
   },
   {
-    label: 'Results & progress',
+    id: 'privacy-security',
+    label: 'Privacy & Data Security',
     items: [
       {
-        id: 'rp-1',
-        question: 'How do I track my progress over time?',
+        id: 'pv-1',
+        question: 'Are my photos deleted after the analysis?',
         answer:
-          'Your dashboard shows a timeline of all analyses with comparative metrics, allowing you to visualise changes in symmetry, proportions, and skin quality over time.',
+          'Yes. All uploaded photos are processed in memory and deleted from our processing servers immediately. If you opt-in to save your report, data is fully encrypted.',
       },
       {
-        id: 'rp-2',
-        question: 'Will I see improvement after following recommendations?',
+        id: 'pv-2',
+        question: 'Who has access to my facial data?',
         answer:
-          'Most users who follow their personalised skincare and lifestyle recommendations report noticeable improvements within 8–12 weeks.',
+          'Access is restricted to automated algorithms and strictly confidential. We never sell, share, or disclose your biometric data to third parties.',
       },
     ],
   },
   {
-    label: 'General questions',
+    id: 'results-recs',
+    label: 'Results & Recommendations',
     items: [
       {
-        id: 'gq-1',
-        question: 'What age group is this suitable for?',
+        id: 'rr-1',
+        question: 'How do I read my biometric score?',
         answer:
-          'Our analysis is designed for adults 18 and over. Facial proportions change significantly during adolescence, so we recommend waiting until facial development is complete.',
+          'Your biometric scores compare specific facial ratios to demographic and aesthetic research databases. They are designed for self-improvement and progress tracking.',
       },
       {
-        id: 'gq-2',
-        question: 'Do you support all ethnicities?',
+        id: 'rr-2',
+        question: 'What treatments are typically suggested?',
         answer:
-          'Yes. Our AI models are trained on a diverse, multi-ethnic dataset and adapt recommendations to account for ethnic variation in facial structure and beauty standards.',
+          'We focus primarily on non-invasive skincare routines, postural improvements, facial exercise patterns, and science-backed lifestyle changes.',
+      },
+    ],
+  },
+  {
+    id: 'dermatological-standards',
+    label: 'Dermatological Standards',
+    items: [
+      {
+        id: 'ds-1',
+        question: 'Are these suggestions approved by dermatologists?',
+        answer:
+          'Yes, our recommendation engine is co-developed with clinical dermatologists to ensure that skincare advice is safe, modern, and clinically validated.',
+      },
+      {
+        id: 'ds-2',
+        question: 'What if I have an existing skin condition?',
+        answer:
+          'Our advice is purely educational. If you have conditions like active eczema, psoriasis, or severe acne, we strongly advise consulting your personal physician first.',
+      },
+    ],
+  },
+  {
+    id: 'support-refunds',
+    label: 'Support & Refunds',
+    items: [
+      {
+        id: 'sr-1',
+        question: 'Can I get a refund if I am unsatisfied?',
+        answer:
+          'Yes. We offer a 14-day refund policy for analyses that fail to generate or if the system is unable to process your photo successfully due to technical errors.',
+      },
+      {
+        id: 'sr-2',
+        question: 'How do I contact customer support?',
+        answer:
+          'You can contact our support team at hello@qoves.com or use the interactive support chat bubble in the bottom right corner of the dashboard.',
       },
     ],
   },
 ];
 
-/* ── GSAP-animated category row ── */
+/* ── Minor Accordion Item (Question) ── */
+interface AccordionItemProps {
+  item: FaqItem;
+  isOpen: boolean;
+  onToggle: (id: string) => void;
+}
+
+function AccordionItem({ item, isOpen, onToggle }: AccordionItemProps) {
+  const answerWrapperRef = useRef<HTMLDivElement | null>(null);
+  const answerInnerRef = useRef<HTMLDivElement | null>(null);
+  const iconRef = useRef<HTMLDivElement | null>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
+  const iconTweenRef = useRef<gsap.core.Tween | null>(null);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    const wrapper = answerWrapperRef.current;
+    const inner = answerInnerRef.current;
+    const icon = iconRef.current;
+    if (!wrapper || !inner || !icon) return;
+
+    const verticalLine = icon.querySelector('[data-vertical]') as SVGLineElement | null;
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      if (isOpen) {
+        gsap.set(wrapper, { height: 'auto', opacity: 1 });
+        if (verticalLine) gsap.set(verticalLine, { scaleY: 0 });
+      } else {
+        gsap.set(wrapper, { height: 0, opacity: 0 });
+        if (verticalLine) gsap.set(verticalLine, { scaleY: 1 });
+      }
+      return;
+    }
+
+    tweenRef.current?.kill();
+    iconTweenRef.current?.kill();
+
+    if (isOpen) {
+      const naturalHeight = inner.scrollHeight;
+      tweenRef.current = gsap.fromTo(
+        wrapper,
+        { height: 0, opacity: 0 },
+        {
+          height: naturalHeight,
+          opacity: 1,
+          duration: 0.4,
+          ease: 'power2.out',
+          onComplete: () => {
+            gsap.set(wrapper, { height: 'auto' });
+          },
+        }
+      );
+
+      if (verticalLine) {
+        iconTweenRef.current = gsap.to(verticalLine, {
+          scaleY: 0,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      }
+    } else {
+      const currentHeight = wrapper.scrollHeight;
+      gsap.set(wrapper, { height: currentHeight });
+
+      tweenRef.current = gsap.to(wrapper, {
+        height: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.inOut',
+      });
+
+      if (verticalLine) {
+        iconTweenRef.current = gsap.to(verticalLine, {
+          scaleY: 1,
+          duration: 0.3,
+          ease: 'power2.inOut',
+        });
+      }
+    }
+
+    return () => {
+      tweenRef.current?.kill();
+      iconTweenRef.current?.kill();
+    };
+  }, [isOpen]);
+
+  return (
+    <div className={`${styles.item} ${isOpen ? styles.itemActive : ''}`}>
+      <button
+        type="button"
+        className={styles.itemHeader}
+        onClick={() => onToggle(item.id)}
+        aria-expanded={isOpen}
+        aria-controls={`faq-answer-${item.id}`}
+        id={`faq-header-${item.id}`}
+      >
+        <span className={styles.question}>{item.question}</span>
+        <div className={styles.iconWrap} ref={iconRef}>
+          <svg
+            className={styles.iconSvg}
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <line
+              x1="8" y1="3.33" x2="8" y2="12.67"
+              stroke="currentColor"
+              strokeWidth={1.33}
+              strokeLinecap="round"
+              data-vertical=""
+              style={{ transformOrigin: 'center' }}
+            />
+            <line
+              x1="3.33" y1="8" x2="12.67" y2="8"
+              stroke="currentColor"
+              strokeWidth={1.33}
+              strokeLinecap="round"
+            />
+          </svg>
+        </div>
+      </button>
+
+      <div
+        ref={answerWrapperRef}
+        className={styles.answerWrapper}
+        id={`faq-answer-${item.id}`}
+        role="region"
+        aria-labelledby={`faq-header-${item.id}`}
+      >
+        <div ref={answerInnerRef} className={styles.answerInner}>
+          <p className={styles.answerText}>{item.answer}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Major Category Row (GSAP + CSS Transitions) ── */
 interface CategoryRowProps {
-  category: { label: string; items: FaqItem[] };
+  category: FaqCategory;
   isOpen: boolean;
   isLast: boolean;
   onToggle: () => void;
+  activeMinorId: string | null;
+  onMinorToggle: (id: string) => void;
 }
 
-function CategoryRow({ category, isOpen, isLast, onToggle }: CategoryRowProps) {
+function CategoryRow({
+  category,
+  isOpen,
+  isLast,
+  onToggle,
+  activeMinorId,
+  onMinorToggle,
+}: CategoryRowProps) {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const innerRef = useRef<HTMLDivElement | null>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     const wrapper = contentRef.current;
     const inner = innerRef.current;
     if (!wrapper || !inner) return;
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      if (isOpen) {
+        gsap.set(wrapper, { height: 'auto', opacity: 1 });
+      } else {
+        gsap.set(wrapper, { height: 0, opacity: 0 });
+      }
+      return;
+    }
 
     tweenRef.current?.kill();
 
@@ -247,43 +420,56 @@ function CategoryRow({ category, isOpen, isLast, onToggle }: CategoryRowProps) {
           opacity: 1,
           duration: 0.45,
           ease: 'power2.out',
-          onComplete: () => gsap.set(wrapper, { height: 'auto' }),
-        },
+          onComplete: () => {
+            gsap.set(wrapper, { height: 'auto' });
+          },
+        }
       );
     } else {
       const currentHeight = wrapper.scrollHeight;
-      if (currentHeight > 0) {
-        gsap.set(wrapper, { height: currentHeight });
-        tweenRef.current = gsap.to(wrapper, {
-          height: 0,
-          opacity: 0,
-          duration: 0.35,
-          ease: 'power2.inOut',
-        });
-      }
+      gsap.set(wrapper, { height: currentHeight });
+
+      tweenRef.current = gsap.to(wrapper, {
+        height: 0,
+        opacity: 0,
+        duration: 0.35,
+        ease: 'power2.inOut',
+      });
     }
 
-    return () => { tweenRef.current?.kill(); };
+    return () => {
+      tweenRef.current?.kill();
+    };
   }, [isOpen]);
 
   return (
-    <div className={`${styles.iconContainer} ${isLast ? styles.noBorderBottom : ''}`}>
-      <div className={styles.categoryWrapper}>
-        <button
-          type="button"
-          className={styles.accordionHeader}
-          onClick={onToggle}
-          aria-expanded={isOpen}
-        >
-          <h3 className={styles.accordionHeading}>{category.label}</h3>
-          <span className={styles.iconBtn}>
-            {isOpen ? <XIcon color="#233137" /> : <PlusIcon color="#758084" />}
-          </span>
-        </button>
+    <div
+      className={`${styles.categoryRow} ${isOpen ? styles.categoryRowOpen : ''} ${isLast ? styles.noBorderBottom : ''
+        }`}
+    >
+      <button
+        type="button"
+        className={styles.accordionHeader}
+        onClick={onToggle}
+        aria-expanded={isOpen}
+      >
+        <h3 className={styles.accordionHeading}>{category.label}</h3>
+        <span className={styles.iconBtn}>
+          {isOpen ? <XIcon color="#ffffff" /> : <PlusIcon color="#758084" />}
+        </span>
+      </button>
 
-        <div ref={contentRef} className={styles.categoryContentWrapper}>
-          <div ref={innerRef} className={styles.categoryContent}>
-            <FaqAccordion items={category.items} variant="light" />
+      <div ref={contentRef} className={styles.categoryContentWrapper}>
+        <div ref={innerRef} className={styles.categoryContent}>
+          <div className={styles.faqContainer}>
+            {category.items.map((item) => (
+              <AccordionItem
+                key={item.id}
+                item={item}
+                isOpen={activeMinorId === item.id}
+                onToggle={onMinorToggle}
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -293,55 +479,23 @@ function CategoryRow({ category, isOpen, isLast, onToggle }: CategoryRowProps) {
 
 /* ── Main Component ── */
 const TestDetailHeader: React.FC = () => {
-  // Unified state: only 1 major section open at a time
-  // 'featured' = teal General Questions, 'cat-0'..'cat-N' = category rows
-  const [openSection, setOpenSection] = useState<string | null>('featured');
-  const featuredContentRef = useRef<HTMLDivElement | null>(null);
-  const featuredInnerRef = useRef<HTMLDivElement | null>(null);
-  const featuredTweenRef = useRef<gsap.core.Tween | null>(null);
+  // Unified single-accordion states:
+  // Starts with 'about-analysis' open and its 'faq-5' question expanded
+  const [activeCategoryId, setActiveCategoryId] = useState<string | null>('about-analysis');
+  const [activeMinorId, setActiveMinorId] = useState<string | null>('faq-5');
 
-  const isFeaturedOpen = openSection === 'featured';
-
-  const toggleSection = useCallback((sectionId: string) => {
-    setOpenSection((prev) => (prev === sectionId ? null : sectionId));
+  const handleCategoryToggle = useCallback((id: string) => {
+    setActiveCategoryId((prev) => {
+      const next = prev === id ? null : id;
+      // Close all minor questions when a category transitions
+      setActiveMinorId(null);
+      return next;
+    });
   }, []);
 
-  // Animate the featured (teal) section open/close
-  useEffect(() => {
-    const wrapper = featuredContentRef.current;
-    const inner = featuredInnerRef.current;
-    if (!wrapper || !inner) return;
-
-    featuredTweenRef.current?.kill();
-
-    if (isFeaturedOpen) {
-      const naturalHeight = inner.scrollHeight;
-      featuredTweenRef.current = gsap.fromTo(
-        wrapper,
-        { height: 0, opacity: 0 },
-        {
-          height: naturalHeight,
-          opacity: 1,
-          duration: 0.45,
-          ease: 'power2.out',
-          onComplete: () => gsap.set(wrapper, { height: 'auto' }),
-        },
-      );
-    } else {
-      const currentHeight = wrapper.scrollHeight;
-      if (currentHeight > 0) {
-        gsap.set(wrapper, { height: currentHeight });
-        featuredTweenRef.current = gsap.to(wrapper, {
-          height: 0,
-          opacity: 0,
-          duration: 0.35,
-          ease: 'power2.inOut',
-        });
-      }
-    }
-
-    return () => { featuredTweenRef.current?.kill(); };
-  }, [isFeaturedOpen]);
+  const handleMinorToggle = useCallback((id: string) => {
+    setActiveMinorId((prev) => (prev === id ? null : id));
+  }, []);
 
   return (
     <section className={styles.content}>
@@ -359,51 +513,20 @@ const TestDetailHeader: React.FC = () => {
           </p>
         </header>
 
-        {/* ── Test Details Container ── */}
+        {/* ── Test Details Container (FAQ Table) ── */}
         <div className={styles.testDetailsContainer}>
-          {/* Featured Card (teal) — collapsible */}
-          <div className={styles.testDetails}>
-            {/* Decorative watermark */}
-            <span className={styles.watermark} aria-hidden="true">
-              5676
-            </span>
-
-            {/* Content */}
-            <div className={styles.testDetailContent}>
-              {/* Featured Header — clickable to toggle */}
-              <button
-                type="button"
-                className={styles.featuredHeader}
-                onClick={() => toggleSection('featured')}
-                aria-expanded={isFeaturedOpen}
-              >
-                <h3 className={styles.featuredHeading}>
-                  General Questions
-                </h3>
-                <span className={styles.iconBtn}>
-                  {isFeaturedOpen ? <XIcon /> : <PlusIcon />}
-                </span>
-              </button>
-
-              {/* FAQ Items — GSAP animated wrapper */}
-              <div ref={featuredContentRef} className={styles.featuredContentWrapper}>
-                <div ref={featuredInnerRef} className={styles.faqContainer}>
-                  <FaqAccordion items={featuredFaqItems} defaultOpenId="faq-1" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Accordion Category Rows with GSAP animations ── */}
-          {accordionCategories.map((category, index) => {
-            const sectionId = `cat-${index}`;
+          {faqCategories.map((category, index) => {
+            const isOpen = activeCategoryId === category.id;
+            const isLast = index === faqCategories.length - 1;
             return (
               <CategoryRow
-                key={category.label}
+                key={category.id}
                 category={category}
-                isOpen={openSection === sectionId}
-                isLast={index === accordionCategories.length - 1}
-                onToggle={() => toggleSection(sectionId)}
+                isOpen={isOpen}
+                isLast={isLast}
+                onToggle={() => handleCategoryToggle(category.id)}
+                activeMinorId={activeMinorId}
+                onMinorToggle={handleMinorToggle}
               />
             );
           })}
@@ -414,4 +537,3 @@ const TestDetailHeader: React.FC = () => {
 };
 
 export default TestDetailHeader;
-

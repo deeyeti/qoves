@@ -9,6 +9,7 @@ export default function Home() {
       <PersonalizedPlan />
       <div className={styles.spacer} />
       <TestDetailHeader />
+      <div className={styles.spacer} />
       <EndSection />
     </main>
   );

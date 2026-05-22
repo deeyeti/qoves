@@ -1,5 +1,5 @@
 /* ──────────────────────────────────────────────
-   TestDetailHeader – Full FAQ Section
+   TestDetailHeader – Rebuilt Unified FAQ Section
    Figma-precise, fully fluid (no fixed widths)
    ────────────────────────────────────────────── */
 
@@ -104,7 +104,7 @@
   max-width: 588px;
 }
 
-/* ── 8. Test Details Container ── */
+/* ── 8. Test Details Container (Table Parent) ── */
 .testDetailsContainer {
   display: flex;
   flex-direction: column;
@@ -119,53 +119,47 @@
   box-sizing: border-box;
 }
 
-/* ── 9. Test Details (featured card — teal) ── */
-.testDetails {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 8px;
-  isolation: isolate;
-  position: relative;
-  width: 100%;
-  background: #9aaeb5;
-  box-shadow: 0px 14px 17.5px rgba(154, 174, 181, 0.1);
-  border-radius: 8px;
+/* ── 9. Category Row (Closed State) ── */
+.categoryRow {
   box-sizing: border-box;
-  overflow: hidden;
-}
-
-/* ── 10. Decorative Watermark ── */
-.watermark {
-  position: absolute;
-  left: calc(50% - 222px - 49px);
-  top: -90px;
-  width: 444px;
-  height: 542px;
-  transform: rotate(-90deg);
-  font-size: 360px;
-  font-weight: 700;
-  line-height: 542px;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.03);
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-
-/* ── 11. Test Detail Content ── */
-.testDetailContent {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0;
+  padding: 8px;
   width: 100%;
-  position: relative;
-  z-index: 1;
+  background: #ffffff;
+  border-bottom: 0.75px solid #f2f2f2;
+  border-radius: 0px;
+  margin: 0;
+  color: #233137;
+  overflow: hidden;
+  transition: 
+    background 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    border-radius 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    margin 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    color 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+
+  &.noBorderBottom {
+    border-bottom: none;
+  }
 }
 
-/* ── 12. Featured Header (now a button) ── */
-.featuredHeader {
+/* ── 9b. Category Row (Open State with Teal Gradient) ── */
+.categoryRowOpen {
+  background: linear-gradient(135deg, rgba(154, 174, 181, 0.9) 0%, rgba(74, 101, 109, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0px 14px 17.5px rgba(74, 101, 109, 0.15);
+  border-radius: 8px;
+  border-bottom: none !important;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+/* ── 10. Accordion Header (Category Toggle Button) ── */
+.accordionHeader {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -187,212 +181,144 @@
   }
 }
 
-.featuredHeading {
-  font-family: 'PP Neue Montreal', sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 24px;
-  color: #ffffff;
-  margin: 0;
-}
-
-/* ── 12b. Featured Content Wrapper (GSAP animated) ── */
-.featuredContentWrapper {
-  overflow: hidden;
-}
-
-/* ── 13. FAQ Container (frosted glass) ── */
-.faqContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 8px;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(50px);
-  border-radius: 8px;
-  box-sizing: border-box;
-}
-
-/* ── 14. Expanded Item ── */
-.expandedItem {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 12px;
-  gap: 12px;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0px 16px 16px rgba(35, 49, 55, 0.03);
-  backdrop-filter: blur(50px);
-  border-radius: 6px;
-  box-sizing: border-box;
-}
-
-.questionBlock {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0;
-  gap: 9px;
-  flex: 1;
-  min-width: 0;
-}
-
-.questionText {
-  font-family: 'PP Neue Montreal', sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
-  display: flex;
-  align-items: center;
-  color: #ffffff;
-  width: 100%;
-}
-
-.answerRow {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0;
-  width: 100%;
-}
-
-.answerText {
-  font-family: 'PP Neue Montreal', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  color: #ffffff;
-  opacity: 0.8;
-  margin: 0;
-  max-width: 658px;
-}
-
-/* ── 15. Collapsed Item ── */
-.collapsedItem {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 12px;
-  gap: 12px;
-  width: 100%;
-  border: none;
-  border-bottom: 0.75px solid rgba(255, 255, 255, 0.1);
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-  outline: none;
-
-  &:focus-visible {
-    outline: 1px solid rgba(255, 255, 255, 0.4);
-    outline-offset: -1px;
-    border-radius: 4px;
-  }
-
-  &.noBorder {
-    border-bottom: none;
-  }
-}
-
-.collapsedContent {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0;
-  gap: 9px;
-  flex: 1;
-  min-width: 0;
-}
-
-.collapsedText {
-  font-family: 'PP Neue Montreal', sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
-  display: flex;
-  align-items: center;
-  color: #ffffff;
-}
-
-/* ── 16. Icon Container (accordion rows) ── */
-.iconContainer {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 8px;
-  width: 100%;
-  border-bottom: 0.75px solid #f2f2f2;
-
-  &.noBorderBottom {
-    border-bottom: none;
-  }
-}
-
-/* ── 17. Accordion Header (now a button for interactivity) ── */
-.accordionHeader {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  gap: 12px;
-  width: 100%;
-  box-sizing: border-box;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  outline: none;
-  color: inherit;
-
-  &:focus-visible {
-    outline: 1px solid rgba(35, 49, 55, 0.3);
-    outline-offset: -1px;
-    border-radius: 4px;
-  }
-}
-
 .accordionHeading {
   font-family: 'PP Neue Montreal', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
-  display: flex;
-  align-items: center;
-  color: #233137;
+  color: inherit;
   margin: 0;
 }
 
-/* ── 17b. Category Wrapper & Content ── */
-.categoryWrapper {
+/* ── 11. Category Content Wrapper ── */
+.categoryContentWrapper {
+  overflow: hidden;
   width: 100%;
 }
 
-.categoryContentWrapper {
+.categoryContent {
+  width: 100%;
+  padding: 0 4px 12px;
+  box-sizing: border-box;
+}
+
+/* ── 12. FAQ Inner Container (Frosted Glass Block) ── */
+.faqContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px 4px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-top: 8px;
+}
+
+/* ── 13. Individual FAQ Item (Minor Question) ── */
+.item {
+  box-sizing: border-box;
+  width: 100%;
+  border-bottom: 0.75px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+/* ── Active / Expanded FAQ Item (Frosted Card) ── */
+.itemActive {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  border-radius: 6px;
+  box-shadow: 0px 16px 16px rgba(35, 49, 55, 0.03);
+  border-bottom: none;
+  margin-bottom: 2px;
+}
+
+/* ── 14. Item Header Button ── */
+.itemHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+  color: inherit;
+
+  &:focus-visible {
+    outline: 1px solid rgba(255, 255, 255, 0.4);
+    outline-offset: -1px;
+    border-radius: 4px;
+  }
+}
+
+/* ── 15. Minor Question & Answer Texts ── */
+.question {
+  font-family: 'PP Neue Montreal', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+}
+
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: inherit;
+}
+
+.iconSvg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.answerWrapper {
   overflow: hidden;
   height: 0;
+  width: 100%;
 }
 
-.categoryContent {
-  padding: 0 8px 12px;
-  background: rgba(154, 174, 181, 0.06);
-  border-radius: 0 0 8px 8px;
-  color: #233137;
+.answerInner {
+  padding: 0 12px 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* ── 18. Shared Icon Button ── */
+.answerText {
+  font-family: 'PP Neue Montreal', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+  color: inherit;
+  opacity: 0.8;
+  margin: 0;
+  max-width: 658px;
+}
+
+/* ── 16. Shared Icon Button Styles ── */
 .iconBtn {
   display: flex;
   flex-direction: row;
@@ -413,10 +339,20 @@
   }
 }
 
-/* ── 19. Icon SVG ── */
-.iconSvg {
-  display: block;
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
+/* ── 17. Responsive ── */
+@media (max-width: 700px) {
+  .question {
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  .answerText {
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  .accordionHeading {
+    font-size: 18px;
+    line-height: 22px;
+  }
 }
