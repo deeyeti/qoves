@@ -192,17 +192,16 @@
 .centreImageWrap {
   position: absolute;
   top: -112px;
-  left: calc(50% - 366px);
+  left: 348px;
   width: 732px;
   height: 1097px;
+  transform: rotate(0deg);
   opacity: 1;
   z-index: 3;
   pointer-events: none;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  will-change: transform;
-  transform-origin: center 30%;
 }
 
 
