@@ -12,9 +12,9 @@ export default function Home() {
         <div className={styles.spacer} />
       </div>
       
-      <TestDetailHeader />
-      <div className={styles.spacer} />
       <FacialDashboard />
+      <div className={styles.spacer} />
+      <TestDetailHeader />
       <div className={styles.spacer} />
       <EndSection />
     </main>
