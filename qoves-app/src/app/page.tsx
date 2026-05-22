@@ -1,5 +1,6 @@
 import PersonalizedPlan from "@/components/PersonalizedPlan";
 import TestDetailHeader from "@/components/TestDetailHeader";
+import FacialDashboard from "@/components/FacialDashboard";
 import EndSection from "@/components/EndSection";
 import styles from "./page.module.scss";
 
@@ -12,6 +13,8 @@ export default function Home() {
       </div>
       
       <TestDetailHeader />
+      <div className={styles.spacer} />
+      <FacialDashboard />
       <div className={styles.spacer} />
       <EndSection />
     </main>
