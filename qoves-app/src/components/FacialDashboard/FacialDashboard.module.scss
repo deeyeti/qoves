@@ -192,7 +192,7 @@
 .centreImageWrap {
   position: absolute;
   top: -112px;
-  left: 348px;
+  left: calc(50% - 366px);
   width: 732px;
   height: 1097px;
   transform: rotate(0deg);
