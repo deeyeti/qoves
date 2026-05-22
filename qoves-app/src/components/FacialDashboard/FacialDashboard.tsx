@@ -315,19 +315,7 @@ export default function FacialDashboard() {
         .to(`.${styles.meter} i, .${styles.third} i`, { duration: 0.82, scaleX: 1, stagger: 0.08 }, '-=0.35')
         .to(`.${styles.badge}, .${styles.tag}`, { autoAlpha: 1, duration: 0.42, stagger: 0.05, y: 0 }, '-=0.35');
 
-      // Scroll-driven zoom animation for the center lady image
-      if (imageWrapRef.current && sectionRef.current) {
-        gsap.to(imageWrapRef.current, {
-          scale: 0.1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top center',
-            end: 'bottom center',
-            scrub: true,
-          },
-        });
-      }
+
     },
     { scope: sectionRef }
   );
