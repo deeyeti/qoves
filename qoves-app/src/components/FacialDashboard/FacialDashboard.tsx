@@ -318,7 +318,7 @@ export default function FacialDashboard() {
       // Scroll-driven zoom animation for the center lady image
       if (imageWrapRef.current && sectionRef.current) {
         gsap.to(imageWrapRef.current, {
-          scale: 1.1,
+          scale: 0.1,
           ease: 'none',
           scrollTrigger: {
             trigger: sectionRef.current,
