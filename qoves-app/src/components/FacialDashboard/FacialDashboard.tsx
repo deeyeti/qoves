@@ -387,7 +387,7 @@ export default function FacialDashboard() {
                   alt="Facial Analysis Portrait"
                   fill
                   sizes="620px"
-                  style={{ objectFit: 'contain' }}
+                  style={{ objectFit: 'contain', objectPosition: 'bottom center' }}
                   priority
                 />
               </div>

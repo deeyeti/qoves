@@ -737,11 +737,12 @@
   }
 
   .centreImageWrap {
-    top: -50px; /* Pull the lady portrait down slightly to balance with the cards */
+    position: absolute;
+    bottom: 0;
+    top: auto;
     width: 45vw; /* Fluid percentage width that dynamically adapts to device size */
     max-width: 500px;
-    height: 75vw;
-    max-height: 750px;
+    height: 600px; /* Set high container height and anchor to bottom to sit flush */
     left: calc(50% - 22.5vw);
   }
 }
@@ -769,9 +770,11 @@
   }
 
   .centreImageWrap {
-    top: -50px;
+    position: absolute;
+    bottom: 0;
+    top: auto;
     width: 320px; /* Fixed proportional width on mobile canvas */
-    height: 480px;
+    height: 520px; /* Set high container height and anchor to bottom to sit flush */
     left: calc(50% - 160px);
   }
 }
