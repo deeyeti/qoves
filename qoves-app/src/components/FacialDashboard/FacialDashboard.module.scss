@@ -697,7 +697,7 @@
 /* ── Responsive ── */
 
 
-@media (max-width: 1180px) {
+@media (max-width: 1024px) {
   .outerFrame {
     min-height: auto;
   }
@@ -711,10 +711,67 @@
     width: auto;
     font-size: clamp(28px, 3.5vw, 42px);
   }
+
+  .cardContainer {
+    height: 580px;
+  }
+
+  .stage {
+    width: 100%;
+    height: 580px; /* Taller height to accommodate vertical stacks */
+  }
+
+  .leftStack,
+  .rightStack {
+    flex-direction: column; /* Stack vertically for single-column cards */
+    bottom: 20px; /* Pull them down slightly to fit the taller stage */
+    gap: 12px;
+  }
+
+  .leftStack {
+    left: 4vw; /* Float on the left edge with fluid spacing */
+  }
+
+  .rightStack {
+    right: 4vw; /* Float on the right edge with fluid spacing */
+  }
+
+  .centreImageWrap {
+    top: -50px; /* Pull the lady portrait down slightly to balance with the cards */
+    width: 45vw; /* Fluid percentage width that dynamically adapts to device size */
+    max-width: 500px;
+    height: 75vw;
+    max-height: 750px;
+    left: calc(50% - 22.5vw);
+  }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 640px) {
   .outerFrame {
     padding-inline: 12px;
+  }
+
+  .cardContainer {
+    height: auto;
+  }
+
+  .stage {
+    width: 600px; /* Lock base stage width for proportional scaling down on mobile */
+    height: 580px;
+  }
+
+  .leftStack {
+    left: 8px;
+  }
+
+  .rightStack {
+    right: 8px;
+  }
+
+  .centreImageWrap {
+    top: -50px;
+    width: 320px; /* Fixed proportional width on mobile canvas */
+    height: 480px;
+    left: calc(50% - 160px);
   }
 }

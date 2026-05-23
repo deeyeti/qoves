@@ -289,10 +289,10 @@ export default function FacialDashboard() {
   useEffect(() => {
     const handleResize = () => {
       const w = window.innerWidth;
-      if (w < 1360) {
-        // Scale the entire desktop dashboard grid layout down proportionally to fit the viewport beautifully
-        const targetWidth = 1360;
-        const availableWidth = w - 32;
+      if (w < 640) {
+        // For small mobile screens, scale a base stage width of 600px to fit the device viewport perfectly
+        const targetWidth = 600;
+        const availableWidth = w - 16; // 8px lateral padding
         setScale(Math.min(1, availableWidth / targetWidth));
       } else {
         setScale(1);
@@ -372,7 +372,7 @@ export default function FacialDashboard() {
           </div>
         </header>
 
-        <div className={styles.cardContainer} style={{ height: scale !== 1 ? `${480 * scale}px` : undefined }}>
+        <div className={styles.cardContainer} style={{ height: scale !== 1 ? `${580 * scale}px` : undefined }}>
           <div
             className={styles.stage}
             style={{
