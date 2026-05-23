@@ -108,7 +108,7 @@ const PersonalizedPlan: React.FC = () => {
         */}
         <MotionBorder
           borderRadius={18}       /* matches .imageContainer border-radius */
-          dotColor="#A3B8C4"
+          dotColor="#4E606C"
           dotSize={6}
           duration={12}
           trackColor="#D5DDE1"

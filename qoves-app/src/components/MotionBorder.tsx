@@ -46,7 +46,7 @@ interface MotionBorderProps {
 
 const MotionBorder: React.FC<MotionBorderProps> = ({
   borderRadius = 18,
-  dotColor = '#385740a5',
+  dotColor = '#4E606C',
   dotSize = 6,
   duration = 12,
   trackColor = '#3d574073',
@@ -60,11 +60,32 @@ const MotionBorder: React.FC<MotionBorderProps> = ({
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
-  const dot1Ref = useRef<SVGRectElement>(null);
-  const dot2Ref = useRef<SVGRectElement>(null);
+  const dot1Refs = useRef<Array<SVGCircleElement | null>>([]);
+  const dot2Refs = useRef<Array<SVGCircleElement | null>>([]);
 
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [pathD, setPathD] = useState('');
+
+  const N = 150; // Denser particle count for high quality, but ultra low CPU/GPU cost
+  const pathPointsRef = useRef<{ x: number; y: number }[]>([]);
+  const pathLengthRef = useRef<number>(0);
+
+  // Precompute the high-resolution lookup table (LUT) when the path changes
+  useLayoutEffect(() => {
+    if (!pathD || !pathRef.current) return;
+    const path = pathRef.current;
+    const pathLength = path.getTotalLength();
+    pathLengthRef.current = pathLength;
+
+    // Create a high-resolution lookup table (3000 points along the path)
+    const pointsCount = 3000;
+    const points: { x: number; y: number }[] = [];
+    for (let i = 0; i < pointsCount; i++) {
+      const p = path.getPointAtLength((i / (pointsCount - 1)) * pathLength);
+      points.push({ x: p.x, y: p.y });
+    }
+    pathPointsRef.current = points;
+  }, [pathD]);
 
   // Observe parent size
   useEffect(() => {
@@ -206,14 +227,10 @@ const MotionBorder: React.FC<MotionBorderProps> = ({
     setPathD(d);
   }, [size, borderRadius, borderPadding, bridgePosition, bridgeCurveRadius, bridgeGap, imageFraction, gapFraction]);
 
-  // Animate the two square dots along the path
+  // Animate the two circular dots along the path with smooth tapering trails (using high-performance LUT)
   useGSAP(
     () => {
-      if (!pathD || !pathRef.current || !dot1Ref.current || !dot2Ref.current) return;
-
-      const path = pathRef.current;
-      const pathLength = path.getTotalLength();
-      const halfDot = dotSize / 2;
+      if (!pathD || !pathRef.current) return;
 
       const tl = gsap.timeline({ repeat: -1, ease: 'none' });
 
@@ -223,20 +240,44 @@ const MotionBorder: React.FC<MotionBorderProps> = ({
           duration,
           onUpdate: function () {
             const progress = this.progress();
+            const points = pathPointsRef.current;
+            const pointsCount = points.length;
+            const pathLength = pathLengthRef.current;
+            if (pointsCount === 0 || pathLength === 0) return;
 
-            // Dot 1
-            const p1 = path.getPointAtLength(progress * pathLength);
-            gsap.set(dot1Ref.current, { x: p1.x - halfDot, y: p1.y - halfDot });
+            const spacingPixels = 2.0; // tight spacing to overlap and look smooth
+            const spacingProgress = spacingPixels / pathLength;
 
-            // Dot 2 — exactly 50% offset (mirrored)
-            const progress2 = (progress + 0.5) % 1;
-            const p2 = path.getPointAtLength(progress2 * pathLength);
-            gsap.set(dot2Ref.current, { x: p2.x - halfDot, y: p2.y - halfDot });
+            // Animate Dot 1 and its trails
+            for (let i = 0; i < N; i++) {
+              const circle = dot1Refs.current[i];
+              if (!circle) continue;
+
+              const trailProgress = (progress - (i * spacingProgress) + 1) % 1;
+              const index = Math.floor(trailProgress * (pointsCount - 1));
+              const p = points[index];
+              if (p) {
+                gsap.set(circle, { x: p.x, y: p.y });
+              }
+            }
+
+            // Animate Dot 2 and its trails (50% offset)
+            for (let i = 0; i < N; i++) {
+              const circle = dot2Refs.current[i];
+              if (!circle) continue;
+
+              const trailProgress = (progress + 0.5 - (i * spacingProgress) + 1) % 1;
+              const index = Math.floor(trailProgress * (pointsCount - 1));
+              const p = points[index];
+              if (p) {
+                gsap.set(circle, { x: p.x, y: p.y });
+              }
+            }
           },
         }
       );
     },
-    { dependencies: [pathD, duration, dotSize] }
+    { dependencies: [pathD, duration] }
   );
 
   return (
@@ -269,21 +310,47 @@ const MotionBorder: React.FC<MotionBorderProps> = ({
             strokeWidth={trackWidth}
           />
 
-          {/* Lead square dot 1 */}
-          <rect
-            ref={dot1Ref}
-            width={dotSize}
-            height={dotSize}
-            fill={dotColor}
-          />
+          {/* Dot 1 Trail (rendered backwards so lead dot is drawn last/on top) */}
+          {Array.from({ length: N }).map((_, idx) => {
+            const i = N - 1 - idx;
+            const isLead = i === 0;
+            const t = isLead ? 0 : (i - 1) / (N - 2);
+            const sizeFactor = isLead ? 1.0 : 0.65 * Math.pow(1 - t, 1.8);
+            const opacity = isLead ? 1.0 : 0.75 * Math.pow(1 - t, 1.5);
+            const radius = (dotSize / 2) * sizeFactor;
+            return (
+              <circle
+                key={`dot1-${i}`}
+                ref={(el) => { dot1Refs.current[i] = el; }}
+                cx={0}
+                cy={0}
+                r={radius}
+                fill={dotColor}
+                opacity={opacity}
+              />
+            );
+          })}
 
-          {/* Lead square dot 2 — 50% offset, exact mirror */}
-          <rect
-            ref={dot2Ref}
-            width={dotSize}
-            height={dotSize}
-            fill={dotColor}
-          />
+          {/* Dot 2 Trail (rendered backwards so lead dot is drawn last/on top) — 50% offset */}
+          {Array.from({ length: N }).map((_, idx) => {
+            const i = N - 1 - idx;
+            const isLead = i === 0;
+            const t = isLead ? 0 : (i - 1) / (N - 2);
+            const sizeFactor = isLead ? 1.0 : 0.65 * Math.pow(1 - t, 1.8);
+            const opacity = isLead ? 1.0 : 0.75 * Math.pow(1 - t, 1.5);
+            const radius = (dotSize / 2) * sizeFactor;
+            return (
+              <circle
+                key={`dot2-${i}`}
+                ref={(el) => { dot2Refs.current[i] = el; }}
+                cx={0}
+                cy={0}
+                r={radius}
+                fill={dotColor}
+                opacity={opacity}
+              />
+            );
+          })}
         </>
       )}
     </svg>
