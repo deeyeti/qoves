@@ -142,7 +142,7 @@ const melaninLabels = [
   'Dark brown', 'Deep brown', 'Ebony', 'Jet black',
   'Warm black', 'Cool black', 'Pure black',
 ];
-const MELANIN_DEFAULT_TOP = 165;
+const MELANIN_DEFAULT_TOP = 148;
 const MELANIN_DEFAULT_LABEL = 'Dark brown';
 const MELANIN_DEFAULT_BADGE = 'Your eyes have a medium melanin concentration.';
 
@@ -154,11 +154,11 @@ function EyeMelaninCard() {
   const onMouseEnter = useCallback(() => {
     // Preset: index 4 (Hazel green)
     // ny = 4 / 15 = 0.267
-    // stripY = 0.267 * 247 = 66
-    const stripY = 66;
-    if (lineRef.current) gsap.to(lineRef.current, { top: 13 + stripY, duration: 0.35, ease: 'power2.out' });
+    // stripY = 0.267 * 222 = 59
+    const stripY = 59;
+    if (lineRef.current) gsap.to(lineRef.current, { top: 12 + stripY, duration: 0.35, ease: 'power2.out' });
     if (tagLRef.current) {
-      gsap.to(tagLRef.current, { top: 9 + stripY, duration: 0.35, ease: 'power2.out' });
+      gsap.to(tagLRef.current, { top: 8 + stripY, duration: 0.35, ease: 'power2.out' });
       tagLRef.current.textContent = 'Hazel green';
     }
     if (badgeRef.current) {
@@ -169,7 +169,7 @@ function EyeMelaninCard() {
   const onMouseLeave = useCallback(() => {
     if (lineRef.current) gsap.to(lineRef.current, { top: MELANIN_DEFAULT_TOP, duration: 0.4, ease: 'power3.out' });
     if (tagLRef.current) {
-      gsap.to(tagLRef.current, { top: 160, duration: 0.4, ease: 'power3.out' });
+      gsap.to(tagLRef.current, { top: 144, duration: 0.4, ease: 'power3.out' });
       tagLRef.current.textContent = MELANIN_DEFAULT_LABEL;
     }
     if (badgeRef.current) badgeRef.current.textContent = MELANIN_DEFAULT_BADGE;
@@ -248,8 +248,8 @@ function SymmetryCard() {
   const onMouseEnter = useCallback(() => setLines(SYM_HOVER), []);
   const onMouseLeave = useCallback(() => setLines(SYM_DEFAULT), []);
 
-  const idealData   = [{ x: 9, y: 78 }, { x: 93, y: 78 }];
-  const youData     = [{ x: 9, y: lines.youY }, { x: 93, y: lines.youY }];
+  const idealData = [{ x: 9, y: 78 }, { x: 93, y: 78 }];
+  const youData = [{ x: 9, y: lines.youY }, { x: 93, y: lines.youY }];
   const averageData = [{ x: 9, y: lines.avgY }, { x: 93, y: lines.avgY }];
 
   return (
@@ -264,8 +264,8 @@ function SymmetryCard() {
           <CartesianGrid stroke="rgba(242,242,242,0.14)" strokeDasharray="3 4" />
           <XAxis dataKey="x" hide domain={[0, 100]} type="number" />
           <YAxis hide domain={[0, 100]} type="number" />
-          <Scatter data={idealData}   fill="transparent" line={{ stroke: '#e8f4f6', strokeWidth: 2 }}   lineType="joint" name="Ideal"   shape={() => <g />} isAnimationActive={false} />
-          <Scatter data={youData}     fill="transparent" line={{ stroke: '#b6d7dd', strokeWidth: 2 }}   lineType="joint" name="You"     shape={() => <g />} isAnimationActive={false} />
+          <Scatter data={idealData} fill="transparent" line={{ stroke: '#e8f4f6', strokeWidth: 2 }} lineType="joint" name="Ideal" shape={() => <g />} isAnimationActive={false} />
+          <Scatter data={youData} fill="transparent" line={{ stroke: '#b6d7dd', strokeWidth: 2 }} lineType="joint" name="You" shape={() => <g />} isAnimationActive={false} />
           <Scatter data={averageData} fill="transparent" line={{ stroke: '#8fb0b8', strokeWidth: 1.6 }} lineType="joint" name="Average" shape={() => <g />} isAnimationActive={false} />
         </ScatterChart>
       </ResponsiveContainer>
@@ -298,7 +298,14 @@ export default function FacialDashboard() {
       gsap.set(`.${styles.badge}, .${styles.tag}`, { autoAlpha: 0, y: 8 });
       gsap.set(`.${styles.meter} i, .${styles.third} i`, { scaleX: 0, transformOrigin: 'left center' });
 
-      gsap.timeline({ defaults: { ease: 'power3.out' } })
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 75%', // Stagger reveals trigger exactly when the section enters 75% of the viewport
+          once: true,
+        },
+        defaults: { ease: 'power3.out' }
+      })
         .to('[data-fd-reveal]', { autoAlpha: 1, duration: 0.8, stagger: 0.12, y: 0 })
         .to('[data-tilt-card]', { autoAlpha: 1, duration: 0.95, filter: 'blur(0px)', scale: 1, stagger: { amount: 0.55, from: 'center' }, y: 0 }, '-=0.25')
         .to(`.${styles.matrix} span`, { autoAlpha: 1, duration: 0.42, scale: 1, stagger: { amount: 0.55, grid: [10, 10], from: 'center' } }, '-=0.55')
@@ -311,11 +318,11 @@ export default function FacialDashboard() {
           trigger: section,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: true,
+          scrub: 1.2, // Liquid-smooth scrolling catch-up interpolation
         },
-        scale: 1.22,
-        y: 80,
-        transformOrigin: 'bottom center',
+        scale: 1.20,
+        y: -120, // Negative y translate creates a beautiful upward parallax float on scroll down!
+        transformOrigin: 'center center',
         ease: 'none',
       });
     },
@@ -352,7 +359,7 @@ export default function FacialDashboard() {
                 src="/assets/section 2 lady.png"
                 alt="Facial Analysis Portrait"
                 fill
-                sizes="732px"
+                sizes="620px"
                 style={{ objectFit: 'contain' }}
                 priority
               />

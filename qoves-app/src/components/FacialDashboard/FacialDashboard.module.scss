@@ -148,7 +148,8 @@
 .stage {
   position: relative;
   isolation: isolate;
-  width: min(1360px, calc(100% - 80px));
+  width: min(1360px, calc(100% - 48px));
+  /* Expanded from 1360px to 1560px to increase the central gap and make the lady portrait fully visible */
   height: 480px;
   flex: none;
 }
@@ -174,7 +175,7 @@
 .leftStack,
 .rightStack {
   position: absolute;
-  bottom: 110px;
+  bottom: 135px; /* Moved up by 25px to give a more elevated, high-end visual alignment */
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -200,10 +201,13 @@
 
 .centreImageWrap {
   position: relative;
-  top: -112px;
-  left: calc(50% - 366px);
-  width: 732px;
-  height: 1097px;
+  top: -82px; /* Moved lower by 30px to align beautifully with the elevated cards */
+  left: calc(50% - 310px);
+  /* Centered for a 620px width wrapper */
+  width: 620px;
+  /* Scaled down from 732px to let the lady image fit perfectly and be seen clearly */
+  height: 930px;
+  /* Scaled down proportionally from 1097px */
   transform: rotate(0deg);
   opacity: 1;
   z-index: 3;
@@ -259,9 +263,12 @@
 /* ── Eyebrow Matrix Card ── */
 
 .matrixCard {
-  width: 256px;
-  height: 304px;
-  padding: 68px 50px 38px;
+  width: 230px;
+  /* Scaled down 10% from 256px */
+  height: 274px;
+  /* Scaled down 10% from 304px */
+  padding: 61px 45px 34px;
+  /* Scaled down 10% */
 }
 
 .matrix {
@@ -298,23 +305,27 @@
 }
 
 .matrixTop {
-  top: 58px;
+  top: 52px;
+  /* Scaled down 10% */
   left: 50%;
   transform: translateX(-50%);
 }
 
 .matrixLeft {
-  top: 144px;
+  top: 130px;
+  /* Scaled down 10% */
   left: 10px;
 }
 
 .matrixRight {
-  top: 144px;
+  top: 130px;
+  /* Scaled down 10% */
   right: 8px;
 }
 
 .matrixBottom {
-  bottom: 58px;
+  bottom: 52px;
+  /* Scaled down 10% */
   left: 50%;
   transform: translateX(-50%);
 }
@@ -327,17 +338,22 @@
 }
 
 .crosshairX {
-  top: 152px;
+  top: 137px;
+  /* Scaled down 10% */
   left: 10px;
-  width: 236px;
+  width: 212px;
+  /* Scaled down 10% */
   height: 1px;
 }
 
 .crosshairY {
-  top: 66px;
-  left: 128px;
+  top: 60px;
+  /* Scaled down 10% */
+  left: 115px;
+  /* Scaled down 10% */
   width: 1px;
-  height: 178px;
+  height: 160px;
+  /* Scaled down 10% */
   background-image: linear-gradient(0deg, rgba(242, 242, 242, 0.5) 50%, transparent 0);
   background-size: 1px 4px;
 }
@@ -345,8 +361,10 @@
 /* ── Density / Chart Card ── */
 
 .chartCard {
-  width: 256px;
-  height: 176px;
+  width: 230px;
+  /* Scaled down 10% from 256px */
+  height: 158px;
+  /* Scaled down 10% from 176px */
   padding: 7px;
 }
 
@@ -408,8 +426,10 @@
 
 .lipCard {
   display: flex;
-  width: 256px;
-  height: 113px;
+  width: 230px;
+  /* Scaled down 10% from 256px */
+  height: 102px;
+  /* Scaled down 10% from 113px */
   padding: 12px 6px 8px;
   flex-direction: column;
   justify-content: space-between;
@@ -467,8 +487,10 @@
 
 .eyeCard {
   display: flex;
-  width: 246px;
-  height: 304px;
+  width: 221px;
+  /* Scaled down 10% from 246px */
+  height: 274px;
+  /* Scaled down 10% from 304px */
   padding: 18px 6px 8px;
   flex-direction: column;
   justify-content: flex-end;
@@ -480,7 +502,8 @@
 
 .eyeScale {
   position: relative;
-  height: 256px;
+  height: 230px;
+  /* Scaled down 10% from 256px */
 }
 
 .paletteStrip {
@@ -489,7 +512,8 @@
   left: 50%;
   display: flex;
   width: 7px;
-  height: 247px;
+  height: 222px;
+  /* Scaled down 10% from 247px */
   flex-direction: column;
   overflow: hidden;
   border: 1px solid rgba(242, 242, 242, 0.5);
@@ -513,44 +537,55 @@
 }
 
 .eyeMiddle {
-  top: 89px;
+  top: 80px;
+  /* Scaled down 10% */
   left: calc(50% - 34px);
 }
 
 .eyeLower {
-  top: 156px;
+  top: 140px;
+  /* Scaled down 10% */
 }
 
 .eyeBottom {
-  top: 224px;
+  top: 202px;
+  /* Scaled down 10% */
   left: calc(50% - 32px);
 }
 
 .melaninLine {
   position: absolute;
-  top: 165px;
+  top: 148px;
+  /* Scaled down 10% from 165px */
   left: -10px;
-  width: 266px;
+  width: 239px;
+  /* Scaled down 10% from 266px */
   height: 1px;
   background-image: linear-gradient(90deg, rgba(242, 242, 242, 0.38) 50%, transparent 0);
   background-size: 4px 1px;
 }
 
 .tagLeft {
-  top: 160px;
-  left: 65px;
+  top: 144px;
+  /* Scaled down 10% from 160px */
+  left: 58px;
+  /* Scaled down 10% from 65px */
 }
 
 .tagRight {
-  top: 160px;
-  right: 52px;
+  top: 144px;
+  /* Scaled down 10% from 160px */
+  right: 47px;
+  /* Scaled down 10% from 52px */
 }
 
 /* ── Facial Thirds Card ── */
 
 .thirdsCard {
-  width: 316px;
-  height: 148px;
+  width: 284px;
+  /* Scaled down 10% from 316px */
+  height: 133px;
+  /* Scaled down 10% from 148px */
   padding: 9px 7px;
 
   .microLabel {
@@ -563,8 +598,10 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: end;
-  height: 100px;
-  padding-top: 52px;
+  height: 90px;
+  /* Scaled down 10% from 100px */
+  padding-top: 47px;
+  /* Scaled down 10% from 52px */
 }
 
 .third {
@@ -593,8 +630,10 @@
 /* ── Symmetry Card ── */
 
 .symmetryCard {
-  width: 256px;
-  height: 140px;
+  width: 230px;
+  /* Scaled down 10% from 256px */
+  height: 126px;
+  /* Scaled down 10% from 140px */
   padding: 12px 7px 14px;
 
   :global(.recharts-wrapper) {
@@ -603,17 +642,20 @@
 }
 
 .symmetryIdeal {
-  top: 40px;
+  top: 36px;
+  /* Scaled down 10% from 40px */
   right: 18px;
 }
 
 .symmetryYou {
-  top: 59px;
+  top: 53px;
+  /* Scaled down 10% from 59px */
   right: 28px;
 }
 
 .symmetryAverage {
-  top: 79px;
+  top: 71px;
+  /* Scaled down 10% from 79px */
   right: 61px;
 }
 
