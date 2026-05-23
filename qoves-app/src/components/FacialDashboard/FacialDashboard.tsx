@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -284,6 +284,26 @@ export default function FacialDashboard() {
   const sectionRef = useRef<HTMLElement>(null);
   const imageWrapRef = useRef<HTMLDivElement>(null);
 
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w < 1360) {
+        // Scale the entire desktop dashboard grid layout down proportionally to fit the viewport beautifully
+        const targetWidth = 1360;
+        const availableWidth = w - 32;
+        setScale(Math.min(1, availableWidth / targetWidth));
+      } else {
+        setScale(1);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useGSAP(
     () => {
       const section = sectionRef.current;
@@ -352,37 +372,45 @@ export default function FacialDashboard() {
           </div>
         </header>
 
-        <div className={styles.cardContainer}>
-          <DashboardGrid className={styles.stage}>
-            <div ref={imageWrapRef} className={styles.centreImageWrap}>
-              <Image
-                src="/assets/section 2 lady.png"
-                alt="Facial Analysis Portrait"
-                fill
-                sizes="620px"
-                style={{ objectFit: 'contain' }}
-                priority
-              />
-            </div>
-
-            <div className={styles.leftStack}>
-              <EyebrowMatrixCard />
-              <div className={styles.midStack}>
-                <TiltCard className={styles.chartCard} depth={12}>
-                  <DensityChartCard />
-                </TiltCard>
-                <LipSmoothnessCard />
+        <div className={styles.cardContainer} style={{ height: scale !== 1 ? `${480 * scale}px` : undefined }}>
+          <div
+            className={styles.stage}
+            style={{
+              transform: scale !== 1 ? `scale(${scale})` : undefined,
+              transformOrigin: 'top center',
+            }}
+          >
+            <DashboardGrid>
+              <div ref={imageWrapRef} className={styles.centreImageWrap}>
+                <Image
+                  src="/assets/section 2 lady.png"
+                  alt="Facial Analysis Portrait"
+                  fill
+                  sizes="620px"
+                  style={{ objectFit: 'contain' }}
+                  priority
+                />
               </div>
-            </div>
 
-            <div className={styles.rightStack}>
-              <EyeMelaninCard />
-              <div className={styles.rightColumn}>
-                <ThirdsCard />
-                <SymmetryCard />
+              <div className={styles.leftStack}>
+                <EyebrowMatrixCard />
+                <div className={styles.midStack}>
+                  <TiltCard className={styles.chartCard} depth={12}>
+                    <DensityChartCard />
+                  </TiltCard>
+                  <LipSmoothnessCard />
+                </div>
               </div>
-            </div>
-          </DashboardGrid>
+
+              <div className={styles.rightStack}>
+                <EyeMelaninCard />
+                <div className={styles.rightColumn}>
+                  <ThirdsCard />
+                  <SymmetryCard />
+                </div>
+              </div>
+            </DashboardGrid>
+          </div>
         </div>
       </div>
     </section>
