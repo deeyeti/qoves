@@ -35,21 +35,19 @@ function getNorm(e: React.MouseEvent<HTMLElement>) {
 
 const MATRIX_DEFAULT = { row: 3, col: 6 };
 
+const MATRIX_HOVER = { row: 1, col: 8 };
+
 function EyebrowMatrixCard() {
   const [hot, setHot] = useState(MATRIX_DEFAULT);
 
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    const { nx, ny } = getNorm(e);
-    setHot({ row: Math.round(ny * 9), col: Math.round(nx * 9) });
-  }, []);
-
+  const onMouseEnter = useCallback(() => setHot(MATRIX_HOVER), []);
   const onMouseLeave = useCallback(() => setHot(MATRIX_DEFAULT), []);
 
   return (
     <TiltCard
       className={styles.matrixCard}
       depth={18}
-      onMouseMove={onMouseMove}
+      onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       <div className={`${styles.matrixCopy} ${styles.matrixTop}`}>Bold</div>
@@ -82,6 +80,7 @@ function EyebrowMatrixCard() {
 /* ── Lip Smoothness Card ── */
 
 const LIP_DEFAULT = 56;
+const LIP_HOVER = 88;
 
 function LipSmoothnessCard() {
   const [value, setValue] = useState(LIP_DEFAULT);
@@ -104,25 +103,21 @@ function LipSmoothnessCard() {
     });
   }, { dependencies: [value] });
 
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    const { nx } = getNorm(e);
-    setValue(Math.round(nx * 100));
-  }, []);
-
+  const onMouseEnter = useCallback(() => setValue(LIP_HOVER), []);
   const onMouseLeave = useCallback(() => setValue(LIP_DEFAULT), []);
 
   return (
     <TiltCard
       className={styles.lipCard}
       depth={12}
-      onMouseMove={onMouseMove}
+      onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       <div>
         <p className={styles.microLabel}>Lip smoothness</p>
         <strong
           ref={labelRef as unknown as React.RefObject<HTMLElement>}
-          style={{ color: '#f8f8f8', fontSize: 27, fontWeight: 400, lineHeight: '31px' }}
+          style={{ color: '#f8f8f8', fontSize: 24, fontWeight: 400, lineHeight: '28px' }}
         >
           {LIP_DEFAULT}%
         </strong>
@@ -147,7 +142,7 @@ const melaninLabels = [
   'Dark brown', 'Deep brown', 'Ebony', 'Jet black',
   'Warm black', 'Cool black', 'Pure black',
 ];
-const MELANIN_DEFAULT_TOP = 184;
+const MELANIN_DEFAULT_TOP = 165;
 const MELANIN_DEFAULT_LABEL = 'Dark brown';
 const MELANIN_DEFAULT_BADGE = 'Your eyes have a medium melanin concentration.';
 
@@ -156,26 +151,25 @@ function EyeMelaninCard() {
   const tagLRef = useRef<HTMLSpanElement>(null);
   const badgeRef = useRef<HTMLParagraphElement>(null);
 
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    const { ny } = getNorm(e);
-    const stripY = ny * 275;
-    const labelIdx = Math.min(melaninLabels.length - 1, Math.floor(ny * melaninLabels.length));
-    const concentration = ny < 0.3 ? 'low' : ny < 0.7 ? 'medium' : 'high';
-
-    if (lineRef.current) gsap.to(lineRef.current, { top: 15 + stripY, duration: 0.2, ease: 'power2.out' });
+  const onMouseEnter = useCallback(() => {
+    // Preset: index 4 (Hazel green)
+    // ny = 4 / 15 = 0.267
+    // stripY = 0.267 * 247 = 66
+    const stripY = 66;
+    if (lineRef.current) gsap.to(lineRef.current, { top: 13 + stripY, duration: 0.35, ease: 'power2.out' });
     if (tagLRef.current) {
-      gsap.to(tagLRef.current, { top: 10 + stripY, duration: 0.2, ease: 'power2.out' });
-      tagLRef.current.textContent = melaninLabels[labelIdx];
+      gsap.to(tagLRef.current, { top: 9 + stripY, duration: 0.35, ease: 'power2.out' });
+      tagLRef.current.textContent = 'Hazel green';
     }
     if (badgeRef.current) {
-      badgeRef.current.textContent = `Your eyes have a ${concentration} melanin concentration.`;
+      badgeRef.current.textContent = 'Your eyes have a low melanin concentration.';
     }
   }, []);
 
   const onMouseLeave = useCallback(() => {
     if (lineRef.current) gsap.to(lineRef.current, { top: MELANIN_DEFAULT_TOP, duration: 0.4, ease: 'power3.out' });
     if (tagLRef.current) {
-      gsap.to(tagLRef.current, { top: 179, duration: 0.4, ease: 'power3.out' });
+      gsap.to(tagLRef.current, { top: 160, duration: 0.4, ease: 'power3.out' });
       tagLRef.current.textContent = MELANIN_DEFAULT_LABEL;
     }
     if (badgeRef.current) badgeRef.current.textContent = MELANIN_DEFAULT_BADGE;
@@ -185,7 +179,7 @@ function EyeMelaninCard() {
     <TiltCard
       className={styles.eyeCard}
       depth={14}
-      onMouseMove={onMouseMove}
+      onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       <div className={styles.eyeScale}>
@@ -212,18 +206,14 @@ function EyeMelaninCard() {
 function ThirdsCard() {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    const { nx } = getNorm(e);
-    setActiveIdx(Math.min(2, Math.floor(nx * 3)));
-  }, []);
-
+  const onMouseEnter = useCallback(() => setActiveIdx(1), []); // Preset to Middle third
   const onMouseLeave = useCallback(() => setActiveIdx(null), []);
 
   return (
     <TiltCard
       className={styles.thirdsCard}
       depth={10}
-      onMouseMove={onMouseMove}
+      onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       <p className={styles.microLabel}>Facial thirds</p>
@@ -250,15 +240,12 @@ function ThirdsCard() {
 /* ── Symmetry Card ── */
 
 const SYM_DEFAULT = { youY: 62, avgY: 41 };
+const SYM_HOVER = { youY: 82, avgY: 55 };
 
 function SymmetryCard() {
   const [lines, setLines] = useState(SYM_DEFAULT);
 
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    const { ny } = getNorm(e);
-    setLines({ youY: Math.round(40 + (1 - ny) * 50), avgY: Math.round(25 + (1 - ny) * 30) });
-  }, []);
-
+  const onMouseEnter = useCallback(() => setLines(SYM_HOVER), []);
   const onMouseLeave = useCallback(() => setLines(SYM_DEFAULT), []);
 
   const idealData   = [{ x: 9, y: 78 }, { x: 93, y: 78 }];
@@ -269,7 +256,7 @@ function SymmetryCard() {
     <TiltCard
       className={styles.symmetryCard}
       depth={10}
-      onMouseMove={onMouseMove}
+      onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       <ResponsiveContainer width="100%" height="100%">
@@ -293,14 +280,18 @@ function SymmetryCard() {
   );
 }
 
-/* ── Main Export ── */
-
 export default function FacialDashboard() {
   const sectionRef = useRef<HTMLElement>(null);
   const imageWrapRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const imageWrap = section.querySelector(`.${styles.centreImageWrap}`);
+      if (!imageWrap) return;
+
       gsap.set('[data-fd-reveal]', { autoAlpha: 0, y: 18 });
       gsap.set('[data-tilt-card]', { autoAlpha: 0, filter: 'blur(8px)', scale: 0.94, y: 34 });
       gsap.set(`.${styles.matrix} span, .${styles.paletteStrip} span`, { autoAlpha: 0, scale: 0.65 });
@@ -315,7 +306,18 @@ export default function FacialDashboard() {
         .to(`.${styles.meter} i, .${styles.third} i`, { duration: 0.82, scaleX: 1, stagger: 0.08 }, '-=0.35')
         .to(`.${styles.badge}, .${styles.tag}`, { autoAlpha: 1, duration: 0.42, stagger: 0.05, y: 0 }, '-=0.35');
 
-
+      gsap.to(imageWrap, {
+        scrollTrigger: {
+          trigger: section,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        },
+        scale: 1.22,
+        y: 80,
+        transformOrigin: 'bottom center',
+        ease: 'none',
+      });
     },
     { scope: sectionRef }
   );
@@ -328,6 +330,9 @@ export default function FacialDashboard() {
     >
       <div className={styles.glowBlob1} aria-hidden="true" />
       <div className={styles.glowBlob2} aria-hidden="true" />
+      <div className={styles.glassBackground} aria-hidden="true" />
+      <div className={styles.edgeBlurLeft} aria-hidden="true" />
+      <div className={styles.edgeBlurRight} aria-hidden="true" />
       <div className={styles.outerFrame}>
         <header className={styles.header}>
           <div className={styles.cardHeader}>

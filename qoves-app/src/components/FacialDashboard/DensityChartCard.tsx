@@ -10,6 +10,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  ReferenceLine,
 } from 'recharts';
 import styles from './FacialDashboard.module.scss';
 import type { BellCurvePoint, DensityChartCardProps } from './types';
@@ -93,13 +94,15 @@ export function DensityChartCard({
     { dependencies: [currentDensity] }
   );
 
-  const handleMouseMove = (state: RechartsMouseState) => {
-    const density = state?.activePayload?.[0]?.payload?.density;
-    if (typeof density === 'number') setCurrentDensity(density);
-  };
+  const onMouseEnter = () => setCurrentDensity(82);
+  const onMouseLeave = () => setCurrentDensity(seedDensity);
 
   return (
-    <div className={`${styles.densityCard} ${className}`}>
+    <div
+      className={`${styles.densityCard} ${className}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div className={styles.densityHeader}>
         <p className={styles.microLabel}>EYEBROW DENSITY</p>
         <strong ref={numberRef}>{seedDensity}%</strong>
@@ -110,8 +113,6 @@ export function DensityChartCard({
           <AreaChart
             data={chartData}
             margin={{ top: 8, right: 10, bottom: 4, left: 4 }}
-            onMouseMove={handleMouseMove as never}
-            onMouseLeave={() => {}}
           >
             <defs>
               <linearGradient id="fdColorDensity" x1="0" x2="0" y1="0" y2="1">
@@ -143,6 +144,13 @@ export function DensityChartCard({
               isAnimationActive={false}
               activeDot={{ r: 4, fill: '#ffffff', stroke: '#ffffff', strokeWidth: 0 }}
             />
+            {currentDensity !== seedDensity && (
+              <ReferenceLine
+                x={currentDensity}
+                stroke="rgba(248, 248, 248, 0.55)"
+                strokeDasharray="3 3"
+              />
+            )}
           </AreaChart>
         </ResponsiveContainer>
       </div>
