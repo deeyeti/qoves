@@ -1,0 +1,21 @@
+// ── _fluid.scss ──────────────────────────────────────────────────────────────
+// Fluid typography & spacing helper.
+// Usage:  font-size: fluid(32, 48);
+// Scales linearly from $min-px at 375px viewport to $max-px at 1920px viewport.
+
+@use 'sass:math';
+
+$fluid-min-vw: 375 !default;
+$fluid-max-vw: 1920 !default;
+
+@function fluid($min-px, $max-px, $min-vw: $fluid-min-vw, $max-vw: $fluid-max-vw) {
+  $slope: math.div($max-px - $min-px, $max-vw - $min-vw);
+  $intercept: $min-px - $slope * $min-vw;
+
+  @if $intercept >= 0 {
+    @return clamp(#{$min-px}px, #{$slope * 100}vw + #{$intercept}px, #{$max-px}px);
+  } @else {
+    // intercept is negative — use subtraction form to avoid "clamp(… + -Xpx)"
+    @return clamp(#{$min-px}px, #{$slope * 100}vw - #{math.abs($intercept)}px, #{$max-px}px);
+  }
+}

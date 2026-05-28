@@ -1,6 +1,8 @@
 /* ── FacialDashboard.module.scss ──────────────────────────────────────────── */
 /* Adapted from Om help / components / dashboard / Dashboard.module.scss      */
 
+@use '../../styles/fluid' as *;
+
 .section {
   display: flex;
   flex-direction: column;
@@ -67,10 +69,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 56px 0 0;
+  // Mobile padding-top: 80px → Desktop: 56px (shrinks with viewport).
+  // slope = (56-80)/(1920-375) = -0.01553; intercept = 80 + 0.01553*375 = 85.82px
+  // clamp(floor, preferred, ceiling) → outputs 80px at 375vw, 56px at 1920vw
+  padding: clamp(56px, 85.82px - 1.553vw, 80px) 0 0;
   gap: 32px;
   width: 100%;
-  min-height: 214px;
+  min-height: fluid(214, 246);
   text-align: center;
   flex-shrink: 0;
 
@@ -79,9 +84,9 @@
     width: min(556px, 90%);
     color: #1a1a1a;
     font-family: 'PP Neue Montreal', Arial, sans-serif;
-    font-size: clamp(32px, 3.5vw, 48px);
+    font-size: fluid(32, 48);
     font-weight: 400;
-    line-height: 1.17;
+    line-height: fluid(36, 56);
     letter-spacing: -0.015em;
     text-align: center;
 
@@ -95,9 +100,9 @@
     margin: 0;
     color: rgba(0, 0, 0, 0.56);
     font-family: 'PP Neue Montreal', Arial, sans-serif;
-    font-size: 16px;
+    font-size: fluid(14, 16);
     font-weight: 400;
-    line-height: 24px;
+    line-height: fluid(20, 24);
     text-align: center;
   }
 
@@ -175,7 +180,8 @@
 .leftStack,
 .rightStack {
   position: absolute;
-  bottom: 135px; /* Moved up by 25px to give a more elevated, high-end visual alignment */
+  bottom: 135px;
+  /* Moved up by 25px to give a more elevated, high-end visual alignment */
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -201,7 +207,8 @@
 
 .centreImageWrap {
   position: relative;
-  top: -82px; /* Moved lower by 30px to align beautifully with the elevated cards */
+  top: -82px;
+  /* Moved lower by 30px to align beautifully with the elevated cards */
   left: calc(50% - 310px);
   /* Centered for a 620px width wrapper */
   width: 620px;
@@ -709,7 +716,6 @@
 
   .header h2 {
     width: auto;
-    font-size: clamp(28px, 3.5vw, 42px);
   }
 
   .cardContainer {
@@ -718,31 +724,38 @@
 
   .stage {
     width: 100%;
-    height: 580px; /* Taller height to accommodate vertical stacks */
+    height: 580px;
+    /* Taller height to accommodate vertical stacks */
   }
 
   .leftStack,
   .rightStack {
-    flex-direction: column; /* Stack vertically for single-column cards */
-    bottom: 20px; /* Pull them down slightly to fit the taller stage */
+    flex-direction: column;
+    /* Stack vertically for single-column cards */
+    bottom: 20px;
+    /* Pull them down slightly to fit the taller stage */
     gap: 12px;
   }
 
   .leftStack {
-    left: 4vw; /* Float on the left edge with fluid spacing */
+    left: 4vw;
+    /* Float on the left edge with fluid spacing */
   }
 
   .rightStack {
-    right: 4vw; /* Float on the right edge with fluid spacing */
+    right: 4vw;
+    /* Float on the right edge with fluid spacing */
   }
 
   .centreImageWrap {
     position: absolute;
     bottom: 0;
     top: auto;
-    width: 45vw; /* Fluid percentage width that dynamically adapts to device size */
+    width: 45vw;
+    /* Fluid percentage width that dynamically adapts to device size */
     max-width: 500px;
-    height: 600px; /* Set high container height and anchor to bottom to sit flush */
+    height: 600px;
+    /* Set high container height and anchor to bottom to sit flush */
     left: calc(50% - 22.5vw);
   }
 }
@@ -757,7 +770,8 @@
   }
 
   .stage {
-    width: 600px; /* Lock base stage width for proportional scaling down on mobile */
+    width: 600px;
+    /* Lock base stage width for proportional scaling down on mobile */
     height: 580px;
   }
 
@@ -773,8 +787,10 @@
     position: absolute;
     bottom: 0;
     top: auto;
-    width: 320px; /* Fixed proportional width on mobile canvas */
-    height: 520px; /* Set high container height and anchor to bottom to sit flush */
+    width: 320px;
+    /* Fixed proportional width on mobile canvas */
+    height: 520px;
+    /* Set high container height and anchor to bottom to sit flush */
     left: calc(50% - 160px);
   }
 }

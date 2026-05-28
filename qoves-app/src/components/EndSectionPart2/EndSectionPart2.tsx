@@ -77,6 +77,13 @@ export default function EndSectionPart2() {
       const glassOverlay = section.querySelector('[data-glass-overlay]') as HTMLElement;
       if (!statement || !leftPanel || !rightPanel || !glassOverlay) return;
 
+      // ── Mobile: skip the scroll-pin, show everything statically ──
+      if (window.innerWidth < 769) {
+        gsap.set([statement, leftPanel, rightPanel], { autoAlpha: 1, y: 0, clearProps: 'all' });
+        gsap.set(glassOverlay, { autoAlpha: 0 });
+        return;
+      }
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -174,9 +181,11 @@ export default function EndSectionPart2() {
             </p>
           </div>
 
-          {panels.map((panel) => (
-            <PanelCard key={panel.placement} {...panel} />
-          ))}
+          <div className={styles.panelScrollRow}>
+            {panels.map((panel) => (
+              <PanelCard key={panel.placement} {...panel} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

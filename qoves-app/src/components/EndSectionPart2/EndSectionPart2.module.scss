@@ -12,11 +12,11 @@
   pointer-events: none;
   z-index: 0;
   visibility: hidden; // GSAP autoAlpha will show/hide this
-  
+
   // Sleek frosted glass backdrop-filter to melt the background video
   backdrop-filter: blur(28px) saturate(180%) contrast(90%) brightness(95%);
   -webkit-backdrop-filter: blur(28px) saturate(180%) contrast(90%) brightness(95%);
-  
+
   // Translucent premium gradient for high readability & dark aesthetic
   background: linear-gradient(
     135deg,
@@ -24,7 +24,7 @@
     rgba(10, 10, 10, 0.55) 50%,
     rgba(5, 5, 5, 0.45) 100%
   );
-  
+
   // High-fidelity micro-grain noise overlay
   &::before {
     content: '';
@@ -162,6 +162,11 @@
   }
 }
 
+/* On desktop the wrapper is a transparent pass-through — panels are position:absolute */
+.panelScrollRow {
+  display: contents;
+}
+
 @media (max-width: 1180px) {
   .frame {
     align-items: stretch;
@@ -219,5 +224,122 @@
   .panel h3 {
     font-size: 28px;
     line-height: 32px;
+  }
+}
+
+/* ── Mobile panel row scroll (<769px) ── */
+@media (max-width: 769px) {
+  /* Remove all fixed heights — section ends naturally with its content */
+  .section,
+  .content,
+  .frame {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  .section {
+    overflow: hidden;
+  }
+
+  .content {
+    padding: 0 20px;
+    border: none;
+    flex-direction: column;
+  }
+
+  /* Frame: vertical stack — statement on top, panelScrollRow below */
+  .frame {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 40px 0 32px;
+    gap: 0;
+    border: none;
+    width: 100%;
+  }
+
+  /* GSAP bypassed on mobile — force everything visible */
+  .glassOverlay {
+    display: none;
+  }
+
+  .statement {
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    inset: auto;
+    transform: none !important;
+    width: 100%;
+    text-align: left;
+    align-items: flex-start;
+    order: 1;
+    padding: 0 0 32px;
+
+    h2 {
+      font-size: 32px;
+      line-height: 40px;
+      letter-spacing: -0.64px;
+    }
+  }
+
+  /* ── Horizontal scroll row ── */
+  .panelScrollRow {
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+    gap: 12px;
+    /* Bleed out to show peek of next card */
+    padding: 0 20px 32px 0;
+    order: 2;
+    /* Negative margin to let it bleed to screen edge */
+    width: calc(100% + 20px);
+    margin-right: -20px;
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome / Safari */
+    }
+  }
+
+  .panel {
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    inset: auto !important;
+    /* Each card takes ~85% of viewport width so the next card peeks */
+    flex: 0 0 85vw;
+    max-width: 320px;
+    width: 85vw;
+    height: auto;
+    min-height: 260px;
+    scroll-snap-align: start;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+
+    h3 {
+      font-size: 24px;
+      line-height: 30px;
+      letter-spacing: -0.36px;
+    }
+  }
+
+  /* Neutralise desktop placement modifiers */
+  .left,
+  .right {
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    align-self: auto;
+    order: unset;
   }
 }

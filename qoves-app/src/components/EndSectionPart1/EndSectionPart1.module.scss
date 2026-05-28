@@ -100,7 +100,7 @@
   box-sizing: border-box;
   position: relative;
 
-  & + & {
+  &+& {
     border-left: 1px solid rgba(242, 242, 242, 0.2);
   }
 }
@@ -182,7 +182,69 @@
   }
 }
 
+/* ── CTA Button ── */
+/* Hidden by default — only shown on mobile (<769px) */
+.ctaButton {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 4px 4px 16px;
+  gap: 12px;
+  width: auto;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.28);
+  }
+}
+
+.ctaLabel {
+  flex: 0 0 auto;
+  font-family: 'PP Neue Montreal', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.ctaDivider {
+  width: 0;
+  height: 24px;
+  opacity: 0.4;
+  border-left: 1px solid #e8e8e8;
+  flex-shrink: 0;
+}
+
+.ctaIcon {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  flex-shrink: 0;
+
+  svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+}
+
 @media (max-width: 900px) {
+
   .section,
   .content,
   .wrapper {
@@ -194,7 +256,7 @@
   }
 
   .hero {
-    min-height: 560px;
+    min-height: auto;
     padding: 28px 20px;
   }
 
@@ -202,13 +264,52 @@
     font-size: 34px;
     line-height: 40px;
   }
+}
 
-  .cardGrid {
-    grid-template-columns: 1fr;
+/* ── Mobile card row scroll (<769px) ── */
+@media (max-width: 769px) {
+  /* Show the CTA button only on mobile */
+  .ctaButton {
+    display: inline-flex;
   }
 
-  .card + .card {
-    border-top: 1px solid rgba(242, 242, 242, 0.2);
-    border-left: 0;
+  .cardGrid {
+    /* Switch from 3-col grid to a single horizontal flex row */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+    border-width: 1px 0 0 1px;
+    gap: 0;
+    padding-bottom: 0;
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
+  }
+
+  .card {
+    /* Each card is a fixed-width snap target */
+    flex: 0 0 80vw;
+    max-width: 320px;
+    height: auto;
+    min-height: 262px;
+    scroll-snap-align: start;
+    border-left: 1px solid rgba(242, 242, 242, 0.2);
+
+    /* Reset the sibling-border rule — every card gets a left border */
+    &+& {
+      border-left: 1px solid rgba(242, 242, 242, 0.2);
+      border-top: 0;
+    }
+  }
+
+  .innerContainer {
+    max-width: none;
+    width: 100%;
   }
 }

@@ -110,6 +110,20 @@ export default function EndSectionPart1() {
                 imagined. When you&apos;re guessing about your appearance, your mind often makes
                 things seem worse than they are.
               </p>
+              <a
+                href="#"
+                className={styles.ctaButton}
+                aria-label="Get started with your facial analysis"
+              >
+                <span className={styles.ctaLabel}>Start your glow up</span>
+                <span className={styles.ctaDivider} aria-hidden="true" />
+                <span className={styles.ctaIcon} aria-hidden="true">
+                  {/* Chevron right icon */}
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M7.5 15L12.5 10L7.5 5" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+              </a>
             </div>
           </div>
 
